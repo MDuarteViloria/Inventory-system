@@ -1,5 +1,7 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+import { app, BrowserWindow } from "electron";
+import isDev from "electron-is-dev";
+import { createDB } from "./modules/database/create-db.js";
+import DB from "./modules/database/connect-db.js";
 
 let mainWindow;
 
@@ -7,19 +9,23 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-    },
+    webPreferences: {},
   });
 
-  mainWindow.loadURL('http://localhost:5173');
-  mainWindow.webContents.openDevTools();
+  mainWindow.loadURL("http://localhost:5173");
 }
 
-app.on('ready', createWindow);
+createDB();
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+const database = new DB();
+database.query("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER, price INTEGER, image TEXT)");
+
+database.close()
+
+app.on("ready", createWindow);
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
-})
+});
