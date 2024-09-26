@@ -1,0 +1,24 @@
+{
+  "name": "inventory-desktop-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/electron.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "electron-dev": "concurrently \"npm run run:frontend\" \"wait-on http://localhost:5173 && electron .\"",
+    "run:frontend": "cd ../my-electron-app && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5",
+    "wait-on": "^8.0.1"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "sqlite3": "^5.1.7"
+  }
+}
