@@ -21,7 +21,7 @@ Thumbs.db
 /frontend/build
 
 # SQLite database
-/backend/*.db
+**.db
 
 # Electron cache
 /electron-builder-cache
