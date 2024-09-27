@@ -2,6 +2,7 @@ import { app, BrowserWindow } from "electron";
 import isDev from "electron-is-dev";
 import { createDB } from "./modules/database/create-db.js";
 import DB from "./modules/database/connect-db.js";
+import { createServer } from "./modules/api.js";
 
 let mainWindow;
 
@@ -16,11 +17,7 @@ function createWindow() {
 }
 
 createDB();
-
-const database = new DB();
-database.query("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, quantity INTEGER, price INTEGER, image TEXT)");
-
-database.close()
+createServer();
 
 app.on("ready", createWindow);
 

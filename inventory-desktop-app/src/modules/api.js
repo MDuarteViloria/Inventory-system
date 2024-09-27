@@ -3,18 +3,21 @@ import cors from "cors";
 import morgan from "morgan";
 
 import config from "../../config.js";
-import routerProducts from "./routers/products.js"; 
-const app = express();
+import routerProducts from "./routers/products.js";
 
-// Middlewares
-app.use(cors());
-app.use(express.json({ limit: "10mb" }));
-app.use(morgan("dev"));
+export function createServer() {
+  const app = express();
 
-// Routers
-app.use("/products", routerProducts); 
+  // Middlewares
+  app.use(cors());
+  app.use(express.json({ limit: "10mb" }));
+  app.use(morgan("dev"));
 
-// Abrir servidor.
-app.listen(config.port, () =>
-  console.log(`Server running on port ${config.port}`)
-);
+  // Routers
+  app.use("/products", routerProducts);
+
+  // Abrir servidor.
+  app.listen(config.port, () =>
+    console.log(`Server running on port ${config.port}`)
+  );
+}

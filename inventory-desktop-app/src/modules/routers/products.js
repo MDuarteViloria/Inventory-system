@@ -9,8 +9,7 @@ router.get("/products", async (req, res) => {
     const database = new DB();
 
     try {        
-        const data = await database.query(sql);        
-       
+        const data = await database.query(sql);
         res.json(data.rows);
     } catch (e) {
         console.error("Error al consultar:", e);
