@@ -1,7 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import isDev from "electron-is-dev";
 import { createDB } from "./modules/database/create-db.js";
-import DB from "./modules/database/connect-db.js";
 import { createServer } from "./modules/api.js";
 
 let mainWindow;

@@ -3,7 +3,7 @@ import DB from "../database/connect-db.js";
 
 const router = express.Router();
 
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
     // Consulta SQL para obtener los datos de la tabla 'Products'
     const sql = "SELECT * FROM Products";
     const database = new DB();
