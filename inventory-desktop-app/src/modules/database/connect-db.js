@@ -3,7 +3,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const route = path.resolve(__dirname, "../../sources/inventory-app.db");
+const route = path.join(__dirname, "../../sources/inventory-app.db");
 class DB {
   #db;
   open() {
@@ -15,6 +15,7 @@ class DB {
 
   async query(query, params = []) {
     const db = this.open();
+    console.log(route);
     return new Promise((resolve, reject) => {
       db.serialize(() => {
         db.all(query, [...params], (err, rows) => {
