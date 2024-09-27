@@ -56,6 +56,8 @@ router.post("/", async (req, res) => {
       .json({ success: false, error: "Todos los campos son obligatorios" });
   }
 
+  const database = new DB();
+
   if (Code) {
     const sql = "SELECT * FROM Products WHERE (Code = ?)";
     const data = await database.query(sql, [Code]);
@@ -78,8 +80,9 @@ router.post("/", async (req, res) => {
 
   const sql =
     "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId) VALUES (?, ?, ?, ?, ?, ?)";
-
-  const database = new DB();
+  
+  const sqlStock = "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
+  
 
   try {
     await database.query(sql, [
@@ -90,6 +93,10 @@ router.post("/", async (req, res) => {
       OriginProductId,
       LocationId,
     ]);
+
+    await database.query(sqlStock, [
+      0,
+      Code]);
 
     res.json({
       success: true,
