@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, nativeTheme } from "electron";
 import isDev from "electron-is-dev";
 import { createDB } from "./modules/database/create-db.js";
 import { createServer } from "./modules/api.js";
@@ -9,6 +9,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    minHeight: 600,
+    minWidth: 800,
     webPreferences: {},
   });
 
@@ -17,6 +19,8 @@ function createWindow() {
 
 createDB();
 createServer();
+
+nativeTheme.themeSource = 'light';
 
 app.on("ready", createWindow);
 

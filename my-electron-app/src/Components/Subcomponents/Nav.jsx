@@ -40,7 +40,7 @@ export default function Nav() {
 	const translations = useContext(Contexts.langContext)
 
   return (
-    <nav className="bg-primary min-w-max shadow-[0_0_20px_-1px_#767b91] text-white flex flex-col gap-4 p-8 text-end text-xl">
+    <nav className="bg-primary min-w-max shadow-[0_0_20px_-1px_#767b91] w-max text-white flex flex-col gap-4 p-4 lg:p-8 text-end text-sm lg:text-base">
       {routes.map((route, index) => (
         <Link
           className={
