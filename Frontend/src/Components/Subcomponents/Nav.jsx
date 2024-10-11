@@ -48,14 +48,14 @@ export default function Nav() {
           "w-20 h-10 shadow-lg justify-center items-center fixed top-4 left-8 md:hidden rounded-full bg-primary z-10 " +
           (hidden ? "flex" : "hidden")
         }
-        onClick={() => setHidden(!hidden)}
+        onClick={() => setHidden(false)}
       >
         <box-icon name="menu" size="sm" color="white"></box-icon>
       </button>
       <nav
         className={
-          "bg-primary top-0 md:flex bottom-0 left-0 fixed md:static min-w-max shadow-[0_0_20px_-1px_#767b91] w-max text-white flex-col gap-4 p-4 lg:p-8 text-end text-sm lg:text-base " +
-          (hidden ? "hidden" : "flex")
+          "bg-primary z-20 top-0 md:flex transition-[width,opacity] bottom-0 left-0 fixed md:static min-w-max shadow-[0_0_20px_-1px_#00000070] w-max text-white flex-col gap-4 p-4 lg:p-8 text-end text-sm lg:text-base " +
+          (hidden ? "hide" : "flex")
         }
       >
         <button
@@ -69,7 +69,7 @@ export default function Nav() {
         {routes.map((route, index) => (
           <Link
             className={
-              "w-full h-10 rounded-lg flex bg-secondary/50 hover:bg-secondary justify-start px-8 items-center gap-3 transition-all " +
+              "w-full h-10 rounded-lg flex bg-secondary/50 hover:bg-secondary justify-start px-8 items-center gap-3 " +
               route.css
             }
             key={index}

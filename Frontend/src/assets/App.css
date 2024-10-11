@@ -4,12 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg-base: #fff;
-}
-
 body {
   font-family: "Open Sans", sans-serif;
+}
+
+@media (max-width: 768px) {
+  .hide {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    transition: all 0.25s;
+    width: 0;
+  }
+
+  .hide * {
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    transition: all 0.25s;
+    width: 0;
+  }
 }
 
 @layer components {

@@ -10,6 +10,7 @@ function App() {
 
   return (
     <>
+    <div className="light">
       <contexts.langContext.Provider value={{...lang}}>
         <BrowserRouter>
           <PrincipalLayout>
@@ -19,6 +20,7 @@ function App() {
           </PrincipalLayout>
         </BrowserRouter>
       </contexts.langContext.Provider>
+    </div>
     </>
   );
 }
