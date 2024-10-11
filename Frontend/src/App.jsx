@@ -4,6 +4,7 @@ import PrincipalLayout from "./Components/Subcomponents/PrincipalLayout.jsx";
 import { useState } from "react";
 import contexts from "./Sources/Contexts.js";
 import es_base from "./Sources/es_base.js";
+import Products from "./Components/Products.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -16,6 +17,7 @@ function App() {
           <PrincipalLayout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

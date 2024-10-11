@@ -10,8 +10,31 @@ router.get("/", async (req, res) => {
   const database = new DB();
 
   try {
-    const data = await database.query(sql);
-    res.json(data.rows);
+    let data = await database.query(sql);
+    data = await Promise.all(
+      data.rows.map(async (product) => {
+        return {
+          id: product.id,
+          Name: product.Name,
+          Description: product.Description,
+          Code: product.Code,
+          BarCode: product.BarCode,
+          OriginProduct:
+            (await database
+              .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
+                product.OriginProductId,
+              ])
+              .then((origin) => origin?.rows[0])) ?? null,
+          Location:
+            (await database
+              .query("SELECT id, Name FROM Locations WHERE id = ?", [
+                product.LocationId,
+              ])
+              .then((location) => location?.rows[0])) ?? null,
+        };
+      })
+    );
+    res.json(data);
   } catch (e) {
     console.error("Error al consultar:", e);
     res.status(404).send("Error al consultar la base de datos");
@@ -28,8 +51,31 @@ router.get("/:id", async (req, res) => {
 
   try {
     const data = await database.query(sql, [req.params.id]);
-    if (data.rows[0]) {
-      res.json(data.rows[0]);
+    let product = data.rows[0];
+
+    if (product) {
+
+      product = {
+        id: product.id,
+        Name: product.Name,
+        Description: product.Description,
+        Code: product.Code,
+        BarCode: product.BarCode,
+        OriginProduct:
+          (await database
+            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
+              product.OriginProductId,
+            ])
+            .then((origin) => origin?.rows[0])) ?? null,
+        Location:
+          (await database
+            .query("SELECT id, Name FROM Locations WHERE id = ?", [
+              product.LocationId,
+            ])
+            .then((location) => location?.rows[0])) ?? null,
+      };
+      
+      res.json(product);
     } else {
       res
         .status(404)
@@ -80,9 +126,9 @@ router.post("/", async (req, res) => {
 
   const sql =
     "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId) VALUES (?, ?, ?, ?, ?, ?)";
-  
-  const sqlStock = "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
-  
+
+  const sqlStock =
+    "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
 
   try {
     await database.query(sql, [
@@ -94,9 +140,7 @@ router.post("/", async (req, res) => {
       LocationId,
     ]);
 
-    await database.query(sqlStock, [
-      0,
-      Code]);
+    await database.query(sqlStock, [0, Code]);
 
     res.json({
       success: true,
@@ -178,18 +222,15 @@ router.delete("/:id", async (req, res) => {
   const sqlStock = "DELETE FROM StockProducts WHERE ProductId = ?";
 
   try {
-
     const dbProductRes = await database.query(sql, [req.params.id]);
     const dbStockProductRes = await database.query(sqlStock, [req.params.id]);
 
-    if(dbStockProductRes.ready) {
-
+    if (dbStockProductRes.ready) {
     }
 
     res.json({
       success: dbProductRes.ready && dbStockProductRes.ready,
     });
-
   } catch (e) {
     console.error("Error al eliminar:", e);
     res

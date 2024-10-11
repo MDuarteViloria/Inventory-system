@@ -68,6 +68,9 @@ export default function Nav() {
         </button>
         {routes.map((route, index) => (
           <Link
+            onClick={() => {
+              setHidden(true);
+            }}
             className={
               "w-full h-10 rounded-lg flex bg-secondary/50 hover:bg-secondary justify-start px-8 items-center gap-3 " +
               route.css

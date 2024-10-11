@@ -15,7 +15,6 @@ class DB {
 
   async query(query, params = []) {
     const db = this.open();
-    console.log(route);
     return new Promise((resolve, reject) => {
       db.serialize(() => {
         db.all(query, [...params], (err, rows) => {

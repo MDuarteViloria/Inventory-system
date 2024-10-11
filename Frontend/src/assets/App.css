@@ -6,6 +6,8 @@
 
 body {
   font-family: "Open Sans", sans-serif;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 @media (max-width: 768px) {
@@ -34,6 +36,6 @@ body {
   }
 
   .container-responsive-wrap {
-    @apply [&_>div]:flex [&_>div]:justify-between [&_>div]:flex-grow [&_>div]:gap-10 [&_>div]:min-w-max [&_>div]:w-max [&_>div]:mx-0 [&_>div]:py-10;
+    @apply [&_>div]:flex [&_>div]:justify-between [&_>div]:flex-grow [&_>div]:gap-5 [&_>div]:min-w-max [&_>div]:w-min [&_>div]:mx-0 [&_>div]:py-10;
   }
 }

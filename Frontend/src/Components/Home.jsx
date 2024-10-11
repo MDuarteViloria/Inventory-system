@@ -2,17 +2,20 @@ import { Container, Heading } from "@medusajs/ui";
 import { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import api from "../Sources/Api";
+import { useContext } from "react";
+import Contexts from "../Sources/Contexts";
 
 export default function Home() {
   const [data, setData] = useState(null);
 
+  const lang = useContext(Contexts.langContext);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await api.get("/products");
-      const productLength = await response.json().length;
+      const productResponse = await api.get("/products");
 
       setData({
-        productLength,
+        productLength: productResponse.data.length,
         movementsLength: 0,
         entriesLenght: 0,
       });
@@ -27,33 +30,25 @@ export default function Home() {
       </Container>
       <div className="flex mt-8 gap-4 h-auto flex-wrap container-responsive-wrap">
         <Container>
-          <Heading level="h2">Productos</Heading>
+          <Heading level="h2">{lang.dashboard.products}</Heading>
           <Heading level="h1" className="text-2xl">
-            0
+            {data?.productLength}
           </Heading>
         </Container>
         <Container>
-          <Heading level="h2">
-            Entradas de
-            <br />
-            Inventario
-          </Heading>
+          <Heading level="h2">{lang.dashboard.entries}</Heading>
           <Heading level="h1" className="text-2xl">
-            0
+            {data?.entriesLenght}
           </Heading>
         </Container>
         <Container>
-          <Heading level="h2">
-            Movimientos de
-            <br />
-            Inventario
-          </Heading>
+          <Heading level="h2">{lang.dashboard.movements}</Heading>
           <Heading level="h1" className="text-2xl">
-            0
+            {data?.movementsLength}
           </Heading>
         </Container>
       </div>
-      {data && <Line data={data?.chartData} options={{ responsive: true }} />}
+      {/* {data && <Line data={data?.chartData} options={{ responsive: true }} />} */}
     </>
   );
 }
