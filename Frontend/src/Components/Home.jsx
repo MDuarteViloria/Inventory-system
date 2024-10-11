@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <>
-      <Container>
+      <Container className="bg-primary text-white">
         <Heading level="h1">Inventory Management System</Heading>
       </Container>
       <div className="flex mt-8 gap-4 h-auto flex-wrap container-responsive-wrap">

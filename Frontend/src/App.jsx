@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./Components/Home";
-import PrincipalLayout from "./Components/Subcomponents/PrincipalLayout";
+import Home from "./Components/Home.jsx";
+import PrincipalLayout from "./Components/Subcomponents/PrincipalLayout.jsx";
 import { useState } from "react";
 import contexts from "./Sources/Contexts.js";
 import es_base from "./Sources/es_base.js";

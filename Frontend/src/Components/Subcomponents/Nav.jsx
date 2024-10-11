@@ -45,7 +45,7 @@ export default function Nav() {
     <>
       <button
         className={
-          "w-20 h-10 shadow-lg justify-center items-center fixed top-4 left-8 md:hidden rounded-full bg-secondary z-10 " +
+          "w-20 h-10 shadow-lg justify-center items-center fixed top-4 left-8 md:hidden rounded-full bg-primary z-10 " +
           (hidden ? "flex" : "hidden")
         }
         onClick={() => setHidden(!hidden)}
