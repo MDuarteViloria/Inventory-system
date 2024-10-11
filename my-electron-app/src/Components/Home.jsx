@@ -15,26 +15,6 @@ export default function Home() {
         productLength,
         movementsLength: 0,
         entriesLenght: 0,
-        chartData: {
-          labels: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-          ],
-          datasets: [
-            {
-              label: "My First Dataset",
-              data: [65, 59, 80, 81, 56, 55, 40],
-              fill: false,
-              borderColor: "rgb(75, 192, 192)",
-              tension: 0.1,
-            },
-          ],
-        },
       });
     };
     fetchData();
@@ -45,15 +25,15 @@ export default function Home() {
       <Container>
         <Heading level="h1">Inventory Management System</Heading>
       </Container>
-      <div className="flex justify-stretch mt-8 gap-4 [&_>div]:flex [&_>div]:justify-between [&_>div]:py-10">
+      <div className="flex mt-8 gap-4 h-auto flex-wrap container-responsive-wrap">
         <Container>
-          <Heading level="h3">Productos</Heading>
+          <Heading level="h2">Productos</Heading>
           <Heading level="h1" className="text-2xl">
             0
           </Heading>
         </Container>
         <Container>
-          <Heading level="h3">
+          <Heading level="h2">
             Entradas de
             <br />
             Inventario
@@ -63,7 +43,7 @@ export default function Home() {
           </Heading>
         </Container>
         <Container>
-          <Heading level="h3">
+          <Heading level="h2">
             Movimientos de
             <br />
             Inventario

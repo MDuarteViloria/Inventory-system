@@ -6,6 +6,7 @@ export default {
     "./node_modules/@medusajs/ui/dist/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    darkMode: false,
     extend: {
       colors: {
         primary: "#2d4f8e",

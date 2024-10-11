@@ -5,23 +5,16 @@
   "main": "src/electron.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "electron-dev": "concurrently \"npm run run:frontend\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev": "node src/index.js",
     "run:frontend": "cd ../my-electron-app && npm run start"
   },
   "keywords": [],
   "author": "",
   "type": "module",
   "license": "ISC",
-  "devDependencies": {
-    "concurrently": "^9.0.1",
-    "electron": "^32.1.2",
-    "electron-builder": "^25.0.5",
-    "wait-on": "^8.0.1"
-  },
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "electron-is-dev": "^3.0.1",
     "express": "^4.21.0",
     "morgan": "^1.10.0",
     "sqlite3": "^5.1.7"
