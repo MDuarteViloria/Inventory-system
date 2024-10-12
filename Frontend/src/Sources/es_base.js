@@ -12,6 +12,9 @@ export default {
     entries: "Entradas de Inventario",
     movements: "Movimientos de Inventario",
   },
+  general: { 
+    export: "Exportar",
+  },
   products: {
     new: "Nuevo producto",
     headers: {
@@ -21,6 +24,7 @@ export default {
       barCode: "Código de barras",
       originProduct: "Origen del producto",
       location: "Ubicación",
-    }
+    },
+    createProductHeader: "Crear nuevo producto",
   }
 };

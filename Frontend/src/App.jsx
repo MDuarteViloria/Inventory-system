@@ -5,6 +5,7 @@ import { useState } from "react";
 import contexts from "./Sources/Contexts.js";
 import es_base from "./Sources/es_base.js";
 import Products from "./Components/Products.jsx";
+import ProductNew from "./Components/ProductNew.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -18,6 +19,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/products/new" element={<ProductNew />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>
