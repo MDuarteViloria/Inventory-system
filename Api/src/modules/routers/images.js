@@ -9,7 +9,6 @@ import config from "../../../config.js";
 const router = express.Router();
 const upload = createMemoryStorage();
 
-// GET
 router.post("/", upload.array("images"), async (req, res) => {
   const db = new DB();
 
@@ -44,6 +43,21 @@ router.post("/", upload.array("images"), async (req, res) => {
 
   // RETURING
   return res.json({ success: true, images: response });
+});
+
+router.get("/", async (req, res) => {
+  const db = new DB();
+
+  const images = await db.query(`SELECT id, Route FROM Images`).then((data) =>
+    data.rows.map((row) => ({
+      id: row.id,
+      url: `${config.backendUrl}/images/${row.id}`,
+    }))
+  );
+
+  db.close();
+
+  return res.json(images);
 });
 
 router.get("/:id", async (req, res) => {
@@ -83,21 +97,6 @@ router.delete("/:id", async (req, res) => {
 
     return res.json({ success: true });
   } else return res.sendStatus(404);
-});
-
-router.get("/", async (req, res) => {
-  const db = new DB();
-
-  const images = await db.query(`SELECT id, Route FROM Images`).then((data) =>
-    data.rows.map((row) => ({
-      id: row.id,
-      url: `${config.backendUrl}/images/${row.id}`,
-    }))
-  );
-
-  db.close();
-
-  return res.json(images);
 });
 
 export default router;

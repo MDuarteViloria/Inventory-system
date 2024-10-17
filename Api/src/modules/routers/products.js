@@ -91,6 +91,53 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// GET ONE BY CODE
+router.get("/code/:code", async (req, res) => {
+  // Consulta SQL para obtener los datos de la tabla 'Products'
+  const sql = "SELECT * FROM Products WHERE Code = ?";
+  const database = new DB();
+
+  try {
+    const data = await database.query(sql, [req.params.code]);
+    let product = data.rows[0];
+
+    if (product) {
+      product = {
+        id: product.id,
+        Name: product.Name,
+        Description: product.Description,
+        Code: product.Code,
+        BarCode: product.BarCode,
+        OriginProduct:
+          (await database
+            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
+              product.OriginProductId,
+            ])
+            .then((origin) => origin?.rows[0])) ?? null,
+        Location:
+          (await database
+            .query("SELECT id, Name FROM Locations WHERE id = ?", [
+              product.LocationId,
+            ])
+            .then((location) => location?.rows[0])) ?? null,
+      };
+      
+      res.json(product);
+    } else {
+      res
+        .status(404)
+        .json({ success: false, error: "No se encontraron resultados" });
+    }
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res
+      .status(500)
+      .json({ success: false, error: "Error al consultar la base de datos" });
+  } finally {
+    database.close();
+  }
+});
+
 // ADD ONE
 router.post("/", async (req, res) => {
   const { Name, Description, Code, BarCode, OriginProductId, LocationId } =
