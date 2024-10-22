@@ -13,7 +13,7 @@ router.post("/", upload.array("images"), async (req, res) => {
   const db = new DB();
 
   const resultingIds = await Promise.all(
-    req.files.map(async (file) => {
+    req.files?.map(async (file) => {
       // GETTING FILE BUFFER AND FILE NAME
       const fileBuffer = file.buffer;
       const fileName = file.originalname;
@@ -28,7 +28,7 @@ router.post("/", upload.array("images"), async (req, res) => {
       ]);
 
       return rows[0]?.id;
-    })
+    }) ?? []
   );
 
   const response = resultingIds.map((id) => {

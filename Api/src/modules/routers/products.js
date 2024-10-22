@@ -54,7 +54,6 @@ router.get("/:id", async (req, res) => {
     let product = data.rows[0];
 
     if (product) {
-
       product = {
         id: product.id,
         Name: product.Name,
@@ -74,7 +73,7 @@ router.get("/:id", async (req, res) => {
             ])
             .then((location) => location?.rows[0])) ?? null,
       };
-      
+
       res.json(product);
     } else {
       res
@@ -121,7 +120,54 @@ router.get("/code/:code", async (req, res) => {
             ])
             .then((location) => location?.rows[0])) ?? null,
       };
-      
+
+      res.json(product);
+    } else {
+      res
+        .status(404)
+        .json({ success: false, error: "No se encontraron resultados" });
+    }
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res
+      .status(500)
+      .json({ success: false, error: "Error al consultar la base de datos" });
+  } finally {
+    database.close();
+  }
+});
+
+// GET ONE BY CODE
+router.get("/barcode/:barcode", async (req, res) => {
+  // Consulta SQL para obtener los datos de la tabla 'Products'
+  const sql = "SELECT * FROM Products WHERE BarCode = ?";
+  const database = new DB();
+
+  try {
+    const data = await database.query(sql, [req.params.barcode]);
+    let product = data.rows[0];
+
+    if (product) {
+      product = {
+        id: product.id,
+        Name: product.Name,
+        Description: product.Description,
+        Code: product.Code,
+        BarCode: product.BarCode,
+        OriginProduct:
+          (await database
+            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
+              product.OriginProductId,
+            ])
+            .then((origin) => origin?.rows[0])) ?? null,
+        Location:
+          (await database
+            .query("SELECT id, Name FROM Locations WHERE id = ?", [
+              product.LocationId,
+            ])
+            .then((location) => location?.rows[0])) ?? null,
+      };
+
       res.json(product);
     } else {
       res
@@ -140,8 +186,15 @@ router.get("/code/:code", async (req, res) => {
 
 // ADD ONE
 router.post("/", async (req, res) => {
-  const { Name, Description, Code, BarCode, OriginProductId, LocationId } =
-    req.body;
+  const {
+    Name,
+    Description,
+    Code,
+    BarCode,
+    OriginProductId,
+    LocationId,
+    Images,
+  } = req.body;
 
   if (!Name || !Description || !Code) {
     return res
@@ -177,6 +230,9 @@ router.post("/", async (req, res) => {
   const sqlStock =
     "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
 
+  const sqlImage =
+    "INSERT INTO ProductImages (IdProduct, IdImage) VALUES ((SELECT id FROM Products WHERE Code = ?), ?)";
+
   try {
     await database.query(sql, [
       Name,
@@ -186,6 +242,14 @@ router.post("/", async (req, res) => {
       OriginProductId,
       LocationId,
     ]);
+
+    if ((Images ?? []).length > 0) {
+      await Promise.all(
+        Images.map(async (image) => {
+          await database.query(sqlImage, [Code, image]);
+        })
+      );
+    }
 
     await database.query(sqlStock, [0, Code]);
 

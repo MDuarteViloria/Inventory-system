@@ -6,12 +6,13 @@ import config from "../../config.js";
 import routerProducts from "./routers/products.js";
 import routerConfig from "./routers/configuration.js";
 import routerImages from "./routers/images.js";
+import routerOrigins from "./routers/origins.js "
+import routerLocations from "./routers/locations.js"
 
 export function createServer() {
   const app = express();
 
   // Middlewares
-  
   app.use(cors({ origin: "http://localhost:5173", credentials: true }));
   app.use(express.json({ limit: "10mb" }));
   app.use(morgan("dev"));
@@ -20,6 +21,8 @@ export function createServer() {
   app.use("/products", routerProducts);
   app.use("/config", routerConfig)
   app.use("/images", routerImages)
+  app.use("/locations", routerLocations)
+  app.use("/origins", routerOrigins)
 
   // Abrir servidor.
   app.listen(config.port, () =>
