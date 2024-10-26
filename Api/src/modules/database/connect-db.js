@@ -12,7 +12,7 @@ class DB {
     }
     return this.#db;
   }
-
+  
   async query(query, params = []) {
     const db = this.open();
     return new Promise((resolve, reject) => {

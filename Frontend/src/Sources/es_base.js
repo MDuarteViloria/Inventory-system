@@ -15,7 +15,14 @@ export default {
   general: { 
     export: "Exportar",
     cancel: "Cancelar",
+    save: "Guardar",
+    add: "Añadir",
     searchInput: "Buscar...",
+    images: "Imagenes",
+    noItems: "No hay elementos",
+    delete: "Eliminar",
+    edit: "Editar",
+    see: "Ver",
   },
   products: {
     new: "Nuevo producto",
@@ -27,6 +34,7 @@ export default {
       originProduct: "Origen del producto",
       location: "Ubicación",
     },
+    selfName: "Producto",
     create: {
       labels: {
         title: "Título",
@@ -35,12 +43,22 @@ export default {
         barcode: "Código de Barras",
         origin: "Producto de Origen",
         location: "Ubicación",
+        images: "Imagenes",
       },
       validations: {
         code: {
           true: "El código es válido",
           false: "El código ya existe",
-        }
+          notValid: "El código no es válido",
+        },
+        barcode: {
+          true: "El código de barras es válido",
+          notValid: "El código de barras no es válido",
+          false: "El código de barras ya existe",
+        },
+        success: "El producto se ha creado correctamente",
+        badParams: "Todos los campos son obligatorios",
+        error: "Error al crear el producto",
       },
       placeholders: {
         title: "Escriba el título del producto",
@@ -48,6 +66,7 @@ export default {
         origin: "Seleccione el origen del producto",
         location: "Seleccione la ubicación del producto",
         code: "Escriba el Código del producto",
+        images: "Seleccione las imagenes",
         barcode: "Escriba el código de barras del producto (Opcional)",
       },
       general: "Información General",

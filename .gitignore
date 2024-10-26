@@ -41,3 +41,6 @@ build/
 # Lock files
 package-lock.json
 yarn.lock
+
+# Public
+/Api/src/public/images/**

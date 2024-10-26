@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import Contexts from "../../Sources/Contexts";
 import { useContext, useMemo, useState } from "react";
-import { Table } from "@medusajs/ui";
+import { Table, DropdownMenu, IconButton, Drawer } from "@medusajs/ui";
+import { EllipsisHorizontal, PencilSquare, Eye, Trash } from "@medusajs/icons";
+import seeProduct from "../Utilities/seeProduct";
 
 export default function ProductsTable({ data }) {
   const lang = useContext(Contexts.langContext);
-  const navigate = useNavigate();
 
   // PAGINATION LOGIC
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,7 +28,6 @@ export default function ProductsTable({ data }) {
     }
   };
 
-
   return (
     <div className="p-2 overflow-auto">
       <Table>
@@ -46,11 +45,7 @@ export default function ProductsTable({ data }) {
         <Table.Body>
           {data.map((product) => {
             return (
-              <Table.Row
-                className="cursor-pointer"
-                onClick={() => navigate("/products/edit/" + product.id)}
-                key={product.id}
-              >
+              <Table.Row className="cursor-pointer" key={product.id}>
                 <Table.Cell>{product.id}</Table.Cell>
                 <Table.Cell className="w-1/5">{product.Code}</Table.Cell>
                 <Table.Cell className="w-1/3 truncate">
@@ -59,7 +54,9 @@ export default function ProductsTable({ data }) {
                 <Table.Cell className="w-full truncate">
                   {product.Description}
                 </Table.Cell>
-                <Table.Cell></Table.Cell>
+                <Table.Cell>
+                  <ProductDropdown product={product}/>
+                </Table.Cell>
               </Table.Row>
             );
           })}
@@ -76,5 +73,60 @@ export default function ProductsTable({ data }) {
         nextPage={nextPage}
       />
     </div>
+  );
+}
+
+export function ProductDropdown({ product }) {
+  const lang = useContext(Contexts.langContext);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <IconButton>
+            <EllipsisHorizontal />
+          </IconButton>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item onClick={() => {
+            seeProduct(product, lang);
+          }} className="gap-x-2">
+            <Eye className="text-ui-fg-subtle" />
+            {lang.general.see}
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="gap-x-2">
+            <PencilSquare className="text-ui-fg-subtle" />
+            {lang.general.edit}
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item className="gap-x-2">
+            <Trash className="text-ui-fg-subtle" />
+            {lang.general.delete}
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </>
+  );
+}
+
+function SeeDrawer({ children }) {
+  const lang = useContext(Contexts.langContext);
+
+  return (
+    <>
+      <Drawer>
+        <Drawer.Trigger asChild>{children}</Drawer.Trigger>
+        <Drawer.Content>
+          <Drawer.Header></Drawer.Header>
+          <Drawer.Body className="p-4"></Drawer.Body>
+          <Drawer.Footer>
+            <Drawer.Close asChild>
+              <Button variant="secondary">{lang.general.cancel}</Button>
+            </Drawer.Close>
+            <Button></Button>
+          </Drawer.Footer>
+        </Drawer.Content>
+      </Drawer>
+    </>
   );
 }

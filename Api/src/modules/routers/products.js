@@ -1,5 +1,6 @@
 import express from "express";
 import DB from "../database/connect-db.js";
+import config from "../../../config.js";
 
 const router = express.Router();
 
@@ -19,6 +20,11 @@ router.get("/", async (req, res) => {
           Description: product.Description,
           Code: product.Code,
           BarCode: product.BarCode,
+          Images: (await database
+            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+              product.id,
+            ])
+            .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
           OriginProduct:
             (await database
               .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -60,6 +66,11 @@ router.get("/:id", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
+        Images: (await database
+          .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+            product.id,
+          ])
+          .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -107,6 +118,11 @@ router.get("/code/:code", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
+        Images: (await database
+        .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+          product.id,
+        ])
+        .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -154,6 +170,11 @@ router.get("/barcode/:barcode", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
+        Images: (await database
+          .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+            product.id,
+          ])
+          .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [

@@ -8,6 +8,7 @@ export default async function selectDataList(
   drawerTitle = [],
   drawerHeader = "Selecciona",
   cancelButtonText = "Cancelar",
+  searchInputPlaceholder = "Buscar...",
   noItems = "No hay elementos"
 ) {
   const extractProp = (item, arr) => {
@@ -32,7 +33,9 @@ export default async function selectDataList(
         data={procededData}
         resolve={resolve}
         title={drawerHeader}
+        searchInputPlaceholder={searchInputPlaceholder}
         cancelButtonText={cancelButtonText}
+        noItems={noItems}
       />
     );
   }).then((selected) => {
@@ -50,7 +53,8 @@ function DrawerList({
   resolve,
   title,
   cancelButtonText,
-  searchInputPlaceholder = "Buscar...",
+  searchInputPlaceholder,
+  noItems
 }) {
 
   const [search, setSearch] = useState("");
@@ -58,7 +62,7 @@ function DrawerList({
   return (
     <>
       <Drawer onOpenChange={() => resolve(null)} defaultOpen={true}>
-        <Drawer.Content>
+        <Drawer.Content className="z-20">
           <Drawer.Header>
             <Drawer.Title>{title}</Drawer.Title>
           </Drawer.Header>
@@ -94,7 +98,7 @@ function DrawerList({
             }
           </Drawer.Body>
           <Drawer.Footer>
-            <Button onClick={() => resolve(null)} variant="primary">
+            <Button onClick={() => resolve(null)} variant="danger">
               {cancelButtonText}
             </Button>
           </Drawer.Footer>
