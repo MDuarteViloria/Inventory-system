@@ -22,6 +22,16 @@ export default function Nav() {
       icon: <box-icon type="solid" color="white" name="package"></box-icon>,
     },
     {
+      name: "categories",
+      path: "/categories",
+      icon: <box-icon type='solid' color="white" name='category-alt'></box-icon>,
+    },
+    {
+      name: "origins",
+      path: "/origins",
+      icon: <box-icon type='solid' name='map-alt' color='white'></box-icon>,
+    },
+    {
       name: "locations",
       path: "/locations",
       icon: <box-icon color="white" name="cube-alt"></box-icon>,

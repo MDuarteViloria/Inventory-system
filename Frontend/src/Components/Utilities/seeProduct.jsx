@@ -34,9 +34,16 @@ function SeeProduct({ data, resolve, lang }) {
               {data.Name}
             </Heading>
             <Heading className="font-thin mb-3 italic" level="h3">
-              {data.Code}
+              {data.Code} {data.BarCode ? `- ${data.BarCode}` : ""}
             </Heading>
             <hr />
+            {(data.Categories?.length ?? 0) > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {data.Categories?.map((category, index) => (
+                  <Badge key={index}>{category.Name}</Badge>
+                ))}
+              </div>
+            )}
             <Text className="mt-3 mb-4">{data.Description}</Text>
             <hr />
             <div className="grid md:grid-cols-2 gap-3 pt-4 [&_label]:text-xs">
@@ -53,21 +60,23 @@ function SeeProduct({ data, resolve, lang }) {
                 <Badge>{data.Location?.Name ?? ""}</Badge>
               </InputLabel>
             </div>
-            {(data.Images?.length ?? 0) > 0 && <InputLabel
-              className={"mt-4"}
-              label={lang.products.create.labels.images}
-            >
-              <div className="w-full grid grid-cols-2 gap-2">
-                {data.Images?.map((image, index) => (
-                  <img
-                    key={index}
-                    className="w-full object-cover aspect-square border shadow-borders-base rounded-lg"
-                    src={image.Url}
-                    alt={data.Name}
-                  />
-                ))}
-              </div>
-            </InputLabel>}
+            {(data.Images?.length ?? 0) > 0 && (
+              <InputLabel
+                className={"mt-4"}
+                label={lang.products.create.labels.images}
+              >
+                <div className="w-full grid grid-cols-2 gap-2">
+                  {data.Images?.map((image, index) => (
+                    <img
+                      key={index}
+                      className="w-full object-cover aspect-square border shadow-borders-base rounded-lg"
+                      src={image.Url}
+                      alt={data.Name}
+                    />
+                  ))}
+                </div>
+              </InputLabel>
+            )}
           </Drawer.Body>
           <Drawer.Footer>
             <Drawer.Close>

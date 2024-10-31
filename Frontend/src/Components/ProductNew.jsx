@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import {
   Heading,
@@ -15,6 +15,8 @@ import api from "../Sources/Api";
 import Selector from "./Subcomponents/Selector";
 import ImageSelector from "./Subcomponents/ImageSelector";
 import { useNavigate } from "react-router-dom";
+import { MultiSelect } from "./Subcomponents/Multiselect";
+import Api from "../Sources/Api";
 
 export default function ProductNew() {
   const [product, setProduct] = useState({});
@@ -24,8 +26,22 @@ export default function ProductNew() {
   const timeoutBarcodeRef = useRef(null);
   const [validCode, setValidCode] = useState(false);
   const [validBarcode, setValidBarCode] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    Api.get("/categories")
+      .then((res) => {
+        if (res.status === 200) {
+          setCategories(res.data.map((x) => ({ id: x.id, name: x.Name })));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const changeProperty = (name, value) => {
     setProduct({
@@ -98,6 +114,7 @@ export default function ProductNew() {
       OriginProductId: product?.origin?.id,
       LocationId: product?.location?.id,
       Images: product.images?.map((image) => image.id),
+      Categories: selectedCategories,
     };
     await api
       .post("/products", productBody)
@@ -239,6 +256,25 @@ export default function ProductNew() {
               />
             </div>
           </div>
+
+          {/* CATEGORIES */}
+
+          <MultiSelect
+            data={categories}
+            selecteds={selectedCategories}
+            onSelected={(val) => {
+              selectedCategories.includes(val.id)
+                ? setSelectedCategories(
+                    selectedCategories.filter((x) => x !== val.id)
+                  )
+                : setSelectedCategories((x) => [...new Set([...x, val.id])]);
+            }}
+          >
+            <Button variant="secondary" className="mt-4 w-full">
+              {lang.products.create.labels.categories}
+            </Button>
+          </MultiSelect>
+
         </Container>
         <p className="text-sm font-medium ml-2 pb-0.5">{lang.general.images}</p>
         <Container className="flex flex-col gap-4 mb-8">
@@ -261,7 +297,7 @@ export default function ProductNew() {
         </Container>
         <Button
           onClick={saveProduct}
-          variant="primary"
+          variant="secondary"
           className="w-full md:w-1/4 mr-0 ml-auto"
         >
           {lang.general.save}

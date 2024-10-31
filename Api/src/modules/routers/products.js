@@ -20,11 +20,21 @@ router.get("/", async (req, res) => {
           Description: product.Description,
           Code: product.Code,
           BarCode: product.BarCode,
-          Images: (await database
-            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-              product.id,
-            ])
-            .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
+          Categories: (await database.query(
+            "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+            [product.id]
+          ).then((categories) => categories?.rows)) ?? [],
+          Images:
+            (await database
+              .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+                product.id,
+              ])
+              .then((origin) =>
+                origin?.rows.map((image) => ({
+                  Url: config.backendUrl + "/images/" + image.ImageId,
+                  id: image.ImageId,
+                }))
+              )) ?? [],
           OriginProduct:
             (await database
               .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -66,11 +76,21 @@ router.get("/:id", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Images: (await database
-          .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-            product.id,
-          ])
-          .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
+        Categories: (await database.query(
+          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+          [product.id]
+        ).then((categories) => categories?.rows)) ?? [],
+        Images:
+          (await database
+            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+              product.id,
+            ])
+            .then((origin) =>
+              origin?.rows.map((image) => ({
+                Url: config.backendUrl + "/images/" + image.ImageId,
+                id: image.ImageId,
+              }))
+            )) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -118,11 +138,21 @@ router.get("/code/:code", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Images: (await database
-        .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-          product.id,
-        ])
-        .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
+        Categories: (await database.query(
+          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+          [product.id]
+        ).then((categories) => categories?.rows)) ?? [],
+        Images:
+          (await database
+            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+              product.id,
+            ])
+            .then((origin) =>
+              origin?.rows.map((image) => ({
+                Url: config.backendUrl + "/images/" + image.ImageId,
+                id: image.ImageId,
+              }))
+            )) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -170,11 +200,21 @@ router.get("/barcode/:barcode", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Images: (await database
-          .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-            product.id,
-          ])
-          .then((origin) => origin?.rows.map((image) => ({Url: config.backendUrl + '/images/' + image.ImageId, id: image.ImageId})))) ?? [],
+        Categories: (await database.query(
+          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+          [product.id]
+        ).then((categories) => categories?.rows)) ?? [],
+        Images:
+          (await database
+            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
+              product.id,
+            ])
+            .then((origin) =>
+              origin?.rows.map((image) => ({
+                Url: config.backendUrl + "/images/" + image.ImageId,
+                id: image.ImageId,
+              }))
+            )) ?? [],
         OriginProduct:
           (await database
             .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
@@ -214,6 +254,7 @@ router.post("/", async (req, res) => {
     BarCode,
     OriginProductId,
     LocationId,
+    Categories,
     Images,
   } = req.body;
 
@@ -254,6 +295,9 @@ router.post("/", async (req, res) => {
   const sqlImage =
     "INSERT INTO ProductImages (IdProduct, IdImage) VALUES ((SELECT id FROM Products WHERE Code = ?), ?)";
 
+  const sqlCategories =
+    "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES ((SELECT id FROM Products WHERE Code = ?), ?)";
+
   try {
     await database.query(sql, [
       Name,
@@ -268,6 +312,14 @@ router.post("/", async (req, res) => {
       await Promise.all(
         Images.map(async (image) => {
           await database.query(sqlImage, [Code, image]);
+        })
+      );
+    }
+
+    if ((Categories ?? []).length > 0) {
+      await Promise.all(
+        Categories.map(async (category) => {
+          await database.query(sqlCategories, [Code, category]);
         })
       );
     }
@@ -294,6 +346,8 @@ router.patch("/:id", async (req, res) => {
     Description = null,
     Code = null,
     BarCode = null,
+    Images = [],
+    Categories = [],
     OriginProductId = null,
     LocationId = null,
   } = req.body;
@@ -323,6 +377,12 @@ router.patch("/:id", async (req, res) => {
   const sql =
     "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId) WHERE id = ?";
 
+  const sqlImageInit = "DELETE FROM ProductImages WHERE IdProduct = ?";
+  const sqlImageFinish = "INSERT INTO ProductImages (IdProduct, IdImage) VALUES (?, ?)";
+
+  const sqlCategoriesInit = "DELETE FROM CategoriesProducts WHERE IdProduct = ?";
+  const sqlCategoriesFinish = "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
+
   try {
     const dbRes = await database.query(sql, [
       Name,
@@ -333,6 +393,25 @@ router.patch("/:id", async (req, res) => {
       LocationId,
       req.params.id,
     ]);
+
+    if ((Images ?? []).length > 0) {
+      await database.query(sqlImageInit, [req.params.id]);
+      await Promise.all(
+        Images.map(async (image) => {
+          await database.query(sqlImageFinish, [req.params.id, image]);
+        })
+      );
+    }
+
+    if ((Categories ?? []).length > 0) {
+      await database.query(sqlCategoriesInit, [req.params.id]);
+      await Promise.all(
+        Categories.map(async (image) => {
+          await database.query(sqlCategoriesFinish, [req.params.id, image]);
+        })
+      );
+    }
+
     res.json({
       success: dbRes.ready,
     });

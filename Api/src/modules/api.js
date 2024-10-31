@@ -8,6 +8,7 @@ import routerConfig from "./routers/configuration.js";
 import routerImages from "./routers/images.js";
 import routerOrigins from "./routers/origins.js "
 import routerLocations from "./routers/locations.js"
+import routerCategories from "./routers/categories.js"
 
 export function createServer() {
   const app = express();
@@ -23,6 +24,7 @@ export function createServer() {
   app.use("/images", routerImages)
   app.use("/locations", routerLocations)
   app.use("/origins", routerOrigins)
+  app.use("/categories", routerCategories)
 
   // Abrir servidor.
   app.listen(config.port, () =>

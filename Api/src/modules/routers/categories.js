@@ -6,12 +6,11 @@ const router = express.Router();
 // GET ALL
 router.get("/", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Locations";
+  const sql = "SELECT * FROM Categories";
   const database = new DB();
 
   try {
     let data = await database.query(sql);
-    
     res.json(data.rows);
   } catch (e) {
     console.error("Error al consultar:", e);
@@ -32,7 +31,7 @@ router.patch("/:id", async (req, res) => {
 
   const database = new DB();
 
-  const sql = "UPDATE Locations SET Name = ? WHERE id = ?";
+  const sql = "UPDATE Categories SET Name = ? WHERE id = ?";
 
   try {
     await database.query(sql, [Name, req.params.id]);
@@ -52,8 +51,7 @@ router.patch("/:id", async (req, res) => {
 
 // ADD ONE
 router.post("/", async (req, res) => {
-  const { Name } =
-    req.body;
+  const { Name } = req.body;
 
   if (!Name) {
     return res
@@ -63,13 +61,10 @@ router.post("/", async (req, res) => {
 
   const database = new DB();
 
-  const sql =
-    "INSERT INTO Locations (Name) VALUES (?)";
+  const sql = "INSERT INTO Categories (Name) VALUES (?)";
 
   try {
-    await database.query(sql, [
-      Name
-    ]);
+    await database.query(sql, [Name]);
 
     res.json({
       success: true,
@@ -88,7 +83,7 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const database = new DB();
 
-  const sql = "DELETE FROM Locations WHERE id = ?";
+  const sql = "DELETE FROM Categories WHERE id = ?";
 
   try {
     const dbProductRes = await database.query(sql, [req.params.id]);

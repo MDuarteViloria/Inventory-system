@@ -16,6 +16,7 @@ export default function ImageSelector({onSelected, label}) {
   return (
     <InputLabel className={"flex flex-col gap-[0.25rem]"} label={label}>
       <Button
+        variant="secondary"
         onClick={async () => {
           const selected = await selectDataGrid(
             await getData(),

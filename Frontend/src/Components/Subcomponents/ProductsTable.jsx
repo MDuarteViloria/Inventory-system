@@ -1,6 +1,6 @@
 import Contexts from "../../Sources/Contexts";
 import { useContext, useMemo, useState } from "react";
-import { Table, DropdownMenu, IconButton, Drawer } from "@medusajs/ui";
+import { Table, DropdownMenu, IconButton } from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Eye, Trash } from "@medusajs/icons";
 import seeProduct from "../Utilities/seeProduct";
 
@@ -105,28 +105,6 @@ export function ProductDropdown({ product }) {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
-    </>
-  );
-}
-
-function SeeDrawer({ children }) {
-  const lang = useContext(Contexts.langContext);
-
-  return (
-    <>
-      <Drawer>
-        <Drawer.Trigger asChild>{children}</Drawer.Trigger>
-        <Drawer.Content>
-          <Drawer.Header></Drawer.Header>
-          <Drawer.Body className="p-4"></Drawer.Body>
-          <Drawer.Footer>
-            <Drawer.Close asChild>
-              <Button variant="secondary">{lang.general.cancel}</Button>
-            </Drawer.Close>
-            <Button></Button>
-          </Drawer.Footer>
-        </Drawer.Content>
-      </Drawer>
     </>
   );
 }

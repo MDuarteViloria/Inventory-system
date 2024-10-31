@@ -6,6 +6,8 @@ export default {
     settings: "Opciones",
     supplier: "Proveedores",
     locations: "Ubicaciones",
+    categories: "Categorias",
+    origins: "Origenes",
   },
   dashboard: {
     products: "Productos",
@@ -44,6 +46,7 @@ export default {
         origin: "Producto de Origen",
         location: "Ubicación",
         images: "Imagenes",
+        categories: "Categorias",
       },
       validations: {
         code: {

@@ -162,7 +162,7 @@ function DrawerImageList({
                   500
                 );
               }}
-              variant="primary"
+              variant="secondary"
             >
               {saveButtonText}
             </Button>
