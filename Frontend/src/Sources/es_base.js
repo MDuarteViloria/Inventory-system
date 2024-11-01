@@ -14,7 +14,7 @@ export default {
     entries: "Entradas de Inventario",
     movements: "Movimientos de Inventario",
   },
-  general: { 
+  general: {
     export: "Exportar",
     cancel: "Cancelar",
     save: "Guardar",
@@ -74,6 +74,43 @@ export default {
       },
       general: "Información General",
     },
+    edit: {
+      labels: {
+        title: "Título",
+        description: "Descripción",
+        code: "Código",
+        barcode: "Código de Barras",
+        origin: "Producto de Origen",
+        location: "Ubicación",
+        images: "Imagenes",
+        categories: "Categorias",
+      },
+      validations: {
+        code: {
+          true: "El código es válido",
+          false: "El código ya existe",
+          notValid: "El código no es válido",
+        },
+        barcode: {
+          true: "El código de barras es válido",
+          notValid: "El código de barras no es válido",
+          false: "El código de barras ya existe",
+        },
+        success: "El producto se ha editado correctamente",
+        error: "Error al editar el producto",
+      },
+      placeholders: {
+        title: "Escriba el título del producto",
+        description: "Escriba la descripción del producto",
+        origin: "Seleccione el origen del producto",
+        location: "Seleccione la ubicación del producto",
+        code: "Escriba el Código del producto",
+        images: "Seleccione las imagenes",
+        barcode: "Escriba el código de barras del producto (Opcional)",
+      },
+      general: "Información General",
+    },
     createProductHeader: "Crear nuevo producto",
-  }
+    editProductHeader: "Editar producto",
+  },
 };

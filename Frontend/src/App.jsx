@@ -6,6 +6,8 @@ import contexts from "./Sources/Contexts.js";
 import es_base from "./Sources/es_base.js";
 import Products from "./Components/Products.jsx";
 import ProductNew from "./Components/ProductNew.jsx";
+import Locations from "./Components/Locations.jsx";
+import ProductEdit from "./Components/ProductEdit.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -20,6 +22,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
               <Route path="/products/new" element={<ProductNew />} />
+              <Route path="/products/edit/:id" element={<ProductEdit />} />
+              <Route path="/locations" element={<Locations />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

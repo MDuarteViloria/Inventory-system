@@ -3,6 +3,7 @@ import { useContext, useMemo, useState } from "react";
 import { Table, DropdownMenu, IconButton } from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Eye, Trash } from "@medusajs/icons";
 import seeProduct from "../Utilities/seeProduct";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductsTable({ data }) {
   const lang = useContext(Contexts.langContext);
@@ -78,6 +79,7 @@ export default function ProductsTable({ data }) {
 
 export function ProductDropdown({ product }) {
   const lang = useContext(Contexts.langContext);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -94,7 +96,7 @@ export function ProductDropdown({ product }) {
             <Eye className="text-ui-fg-subtle" />
             {lang.general.see}
           </DropdownMenu.Item>
-          <DropdownMenu.Item className="gap-x-2">
+          <DropdownMenu.Item onClick={() => navigate("/products/edit/" + product.id)} className="gap-x-2">
             <PencilSquare className="text-ui-fg-subtle" />
             {lang.general.edit}
           </DropdownMenu.Item>
