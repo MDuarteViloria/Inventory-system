@@ -72,6 +72,7 @@ export default function ProductsTable({ data }) {
         canNextPage={canNextPage}
         previousPage={previousPage}
         nextPage={nextPage}
+        translations={lang.tables}
       />
     </div>
   );

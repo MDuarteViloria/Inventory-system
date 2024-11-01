@@ -113,4 +113,11 @@ export default {
     createProductHeader: "Crear nuevo producto",
     editProductHeader: "Editar producto",
   },
+  tables: {
+      of: "de",
+      results: "resultados",
+      pages: "paginas",
+      prev: "Anterior",
+      next: "Siguiente",
+  }
 };
