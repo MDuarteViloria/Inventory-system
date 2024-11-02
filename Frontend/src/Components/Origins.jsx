@@ -8,33 +8,33 @@ import promptWithComponent from "./Utilities/promptWithComponent";
 import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 
-function Locations() {
+function Origins() {
   const lang = useContext(Contexts.langContext);
 
-  const [locations, setLocations] = useState([]);
+  const [origins, setOrigins] = useState([]);
 
   const fetchData = useCallback(async () => {
-    const locationResponse = await Api.get("/locations");
-    setLocations(locationResponse.data);
+    const originsResponse = await Api.get("/origins");
+    setOrigins(originsResponse.data);
   }, []);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const createNewLocation = async () => {
-    const locationName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.new} />
+  const createNewOrigin = async () => {
+    const originName = await promptWithComponent((resolve) => (
+      <NewNamePrompt resolve={resolve} lang={lang} title={lang.origins.new} />
 
     ));
 
-    if (locationName && locationName.trim() !== "") {
-      await Api.post("/locations", { Name: locationName });
+    if (originName && originName.trim() !== "") {
+      await Api.post("/origins", { Name: originName });
       await fetchData();
-      toast.success(lang.locations.create.success);
+      toast.success(lang.origins.create.success);
     } else {
-      if (locationName !== null) {
-        toast.error(lang.locations.create.validations.badParams);
+      if (originName !== null) {
+        toast.error(lang.origins.create.validations.badParams);
       }
     }
   };
@@ -42,23 +42,23 @@ function Locations() {
   return (
     <div className="flex flex-col gap-4">
       <Container className="bg-primary text-white">
-        <Heading level="h1">{lang.navPaths.locations}</Heading>
+        <Heading level="h1">{lang.navPaths.origins}</Heading>
       </Container>
 
       <div className="flex justify-between mt-5">
-        <Button onClick={createNewLocation} variant="secondary">
+        <Button onClick={createNewOrigin} variant="secondary">
           <Plus />
-          {lang.locations.new}
+          {lang.origins.new}
         </Button>
       </div>
-      {locations && !locations?.error ? (
+      {origins && !origins?.error ? (
         <AdaptableTable
-          data={locations.map((org) => {
+          data={origins.map((org) => {
             return {
               id: org.id,
               Name: org.Name,
               dropDown: (
-                <LocationDropDown
+                <OriginDropDown
                   fetchData={fetchData}
                   lang={lang}
                   originId={org.id}
@@ -69,8 +69,8 @@ function Locations() {
           columnModel={{
             order: ["id", "Name", "dropDown"],
             dataModel: {
-              id: lang.locations.general.id,
-              Name: lang.locations.general.name,
+              id: lang.origins.general.id,
+              Name: lang.origins.general.name,
               dropDown: "",
             },
             css: {
@@ -88,19 +88,19 @@ function Locations() {
   );
 }
 
-function LocationDropDown({ originId: locationId, lang, fetchData }) {
+function OriginDropDown({ originId, lang, fetchData }) {
   const editOrigin = async () => {
     const originName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.edit} />
+      <NewNamePrompt resolve={resolve} lang={lang} title={lang.origins.edit} />
     ));
 
     if (originName && originName.trim() !== "") {
-      await Api.patch("/locations/" + locationId, { Name: originName });
+      await Api.patch("/origins/" + originId, { Name: originName });
       await fetchData();
-      toast.success(lang.locations.create.validations.editted);
+      toast.success(lang.origins.create.validations.editted);
     } else {
       if (originName !== null) {
-        toast.error(lang.locations.create.validations.badParams);
+        toast.error(lang.origins.create.validations.badParams);
       }
     }
   };
@@ -111,7 +111,7 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
     ));
 
     if(confirmed) {
-      await Api.delete("/locations/" + locationId);
+      await Api.delete("/origins/" + originId);
       await fetchData();
       toast.success(lang.general.deletedSuccess);
     }
@@ -144,4 +144,4 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
   );
 }
 
-export default Locations;
+export default Origins;

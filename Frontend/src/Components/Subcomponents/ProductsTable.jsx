@@ -44,23 +44,25 @@ export default function ProductsTable({ data }) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data.map((product) => {
-            return (
-              <Table.Row className="cursor-pointer" key={product.id}>
-                <Table.Cell>{product.id}</Table.Cell>
-                <Table.Cell className="w-1/5">{product.Code}</Table.Cell>
-                <Table.Cell className="w-1/3 truncate">
-                  {product.Name}
-                </Table.Cell>
-                <Table.Cell className="w-full truncate">
-                  {product.Description}
-                </Table.Cell>
-                <Table.Cell>
-                  <ProductDropdown product={product}/>
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
+          {data
+            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+            .map((product) => {
+              return (
+                <Table.Row className="cursor-pointer" key={product.id}>
+                  <Table.Cell>{product.id}</Table.Cell>
+                  <Table.Cell className="w-1/5">{product.Code}</Table.Cell>
+                  <Table.Cell className="w-1/3 truncate">
+                    {product.Name}
+                  </Table.Cell>
+                  <Table.Cell className="w-full truncate">
+                    {product.Description}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <ProductDropdown product={product} />
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
         </Table.Body>
       </Table>
       <Table.Pagination
@@ -91,13 +93,19 @@ export function ProductDropdown({ product }) {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item onClick={() => {
-            seeProduct(product, lang);
-          }} className="gap-x-2">
+          <DropdownMenu.Item
+            onClick={() => {
+              seeProduct(product, lang);
+            }}
+            className="gap-x-2"
+          >
             <Eye className="text-ui-fg-subtle" />
             {lang.general.see}
           </DropdownMenu.Item>
-          <DropdownMenu.Item onClick={() => navigate("/products/edit/" + product.id)} className="gap-x-2">
+          <DropdownMenu.Item
+            onClick={() => navigate("/products/edit/" + product.id)}
+            className="gap-x-2"
+          >
             <PencilSquare className="text-ui-fg-subtle" />
             {lang.general.edit}
           </DropdownMenu.Item>

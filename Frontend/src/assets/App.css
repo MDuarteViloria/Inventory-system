@@ -43,3 +43,8 @@ body {
     @apply [&_>div]:flex [&_>div]:justify-between [&_>div]:flex-grow [&_>div]:gap-5 [&_>div]:min-w-max [&_>div]:w-min [&_>div]:mx-0 [&_>div]:py-10;
   }
 }
+
+.bg-ui-bg-overlay {
+  background-color: var(--bg-overlay);
+  z-index: 20;
+}

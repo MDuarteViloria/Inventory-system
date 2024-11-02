@@ -48,7 +48,6 @@ export default function Home() {
           </Heading>
         </Container>
       </div>
-      {/* {data && <Line data={data?.chartData} options={{ responsive: true }} />} */}
     </>
   );
 }

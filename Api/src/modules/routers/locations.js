@@ -5,7 +5,7 @@ const router = express.Router();
 
 // GET ALL
 router.get("/", async (req, res) => {
-  // Consulta SQL para obtener los datos de la tabla 'Products'
+  // Consulta SQL para obtener los datos de la tabla 'Locations'
   const sql = "SELECT * FROM Locations";
   const database = new DB();
 
@@ -91,10 +91,10 @@ router.delete("/:id", async (req, res) => {
   const sql = "DELETE FROM Locations WHERE id = ?";
 
   try {
-    const dbProductRes = await database.query(sql, [req.params.id]);
+    const dbLocationRes = await database.query(sql, [req.params.id]);
 
     res.json({
-      success: dbProductRes.ready,
+      success: dbLocationRes.ready,
     });
   } catch (e) {
     console.error("Error al eliminar:", e);

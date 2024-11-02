@@ -5,12 +5,13 @@ const router = express.Router();
 
 // GET ALL
 router.get("/", async (req, res) => {
-  // Consulta SQL para obtener los datos de la tabla 'Categories'
-  const sql = "SELECT * FROM Categories";
+  // Consulta SQL para obtener los datos de la tabla 'Providers'
+  const sql = "SELECT * FROM Providers";
   const database = new DB();
 
   try {
     let data = await database.query(sql);
+    
     res.json(data.rows);
   } catch (e) {
     console.error("Error al consultar:", e);
@@ -20,21 +21,35 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
-  const { Name } = req.body;
+router.get("/:id", async (req, res) => {
+  // Consulta SQL para obtener los datos de la tabla 'Providers'
+  const sql = "SELECT * FROM Providers WHERE id = ?";
+  const database = new DB();
 
-  if (!Name) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Todos los campos son obligatorios" });
+  try {
+    let data = await database.query(sql, [req.params.id]);
+    if(data.rows.length === 0) {
+      return res.status(404).send("El proveedor no existe");
+    } else {    
+      res.json(data.rows[0]);
+    }
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(404).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
   }
+})
+
+router.patch("/:id", async (req, res) => {
+  const { Name, Doc } = req.body;
 
   const database = new DB();
 
-  const sql = "UPDATE Categories SET Name = ? WHERE id = ?";
+  const sql = "UPDATE Providers SET Name = IFNULL(?, Name), Doc = IFNULL(?, Doc) WHERE id = ?";
 
   try {
-    await database.query(sql, [Name, req.params.id]);
+    await database.query(sql, [Name, Doc, req.params.id]);
 
     res.json({
       success: true,
@@ -51,9 +66,10 @@ router.patch("/:id", async (req, res) => {
 
 // ADD ONE
 router.post("/", async (req, res) => {
-  const { Name } = req.body;
+  const { Name, Doc } =
+    req.body;
 
-  if (!Name) {
+  if (!Name || !Doc) {
     return res
       .status(400)
       .json({ success: false, error: "Todos los campos son obligatorios" });
@@ -61,10 +77,14 @@ router.post("/", async (req, res) => {
 
   const database = new DB();
 
-  const sql = "INSERT INTO Categories (Name) VALUES (?)";
+  const sql =
+    "INSERT INTO Providers (Doc, Name) VALUES (?, ?)";
 
   try {
-    await database.query(sql, [Name]);
+    await database.query(sql, [
+      Doc,
+      Name
+    ]);
 
     res.json({
       success: true,
@@ -83,13 +103,13 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const database = new DB();
 
-  const sql = "DELETE FROM Categories WHERE id = ?";
+  const sql = "DELETE FROM Providers WHERE id = ?";
 
   try {
-    const dbCategoriesRes = await database.query(sql, [req.params.id]);
-h
+    const dbProviderRes = await database.query(sql, [req.params.id]);
+
     res.json({
-      success: dbCategoriesRes.ready,
+      success: dbProviderRes.ready,
     });
   } catch (e) {
     console.error("Error al eliminar:", e);

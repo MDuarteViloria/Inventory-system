@@ -116,7 +116,9 @@ export default function ProductEdit() {
         }
       });
   };
-  const saveProduct = async () => {
+  const saveProduct = async (e) => {
+    e.target.disabled = true;
+
     if (!validCode) {
       toast.error(lang.products.edit.validations.code.notValid);
       return;
@@ -127,7 +129,7 @@ export default function ProductEdit() {
       return;
     }
 
-    console.log(product)
+    console.log(product);
 
     if ((!product.title, !product.code)) {
       toast.error(lang.products.edit.validations.badParams);
@@ -161,6 +163,8 @@ export default function ProductEdit() {
           toast.error(lang.products.edit.validations.error);
         }
       });
+      
+    e.target.disabled = false;
   };
 
   return product ? (
@@ -339,6 +343,10 @@ export default function ProductEdit() {
       <Toaster />
     </>
   ) : (
-    <></>
+    <>
+      <div className="w-full h-full flex items-center justify-center">
+        <box-icon name="loader-alt" animation="spin"></box-icon>
+      </div>
+    </>
   );
 }

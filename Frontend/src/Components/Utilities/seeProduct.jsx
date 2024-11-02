@@ -1,6 +1,6 @@
 import { Badge, Button, Drawer, Heading, Text } from "@medusajs/ui";
-import { createRoot } from "react-dom/client";
 import InputLabel from "../Subcomponents/Label";
+import { createRoot } from "react-dom/client";
 import "../../assets/App.css";
 
 export default async function seeProduct(product, lang) {

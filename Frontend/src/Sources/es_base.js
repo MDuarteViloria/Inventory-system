@@ -6,7 +6,7 @@ export default {
     settings: "Opciones",
     supplier: "Proveedores",
     locations: "Ubicaciones",
-    categories: "Categorias",
+    categories: "Categorías",
     origins: "Origenes",
   },
   dashboard: {
@@ -25,6 +25,58 @@ export default {
     delete: "Eliminar",
     edit: "Editar",
     see: "Ver",
+    sure: "¿Estas seguro?",
+    imSure: "Estoy seguro",
+    pleaseConfirm: "Por favor confirme",
+    deletedSuccess: "Eliminado correctamente",
+  },
+  origins: {
+    selfName: "Origen",
+    new: "Nuevo origen",
+    edit: "Editar origen",
+    general: {
+      id: "ID",
+      name: "Nombre",
+    },
+    create: {
+      success: "El origen se ha creado correctamente",
+      validations: {
+        badParams: "El nombre no es valido",
+        editted: "El origen se ha editado correctamente"
+      }
+    }
+  },
+  categories: {
+    selfName: "Categoría",
+    new: "Nueva categoría",
+    edit: "Editar categoría",
+    general: {
+      id: "ID",
+      name: "Nombre",
+    },
+    create: {
+      success: "La categoría se ha creado correctamente",
+      validations: {
+        badParams: "El nombre no es valido",
+        editted: "La categoría se ha editado correctamente"
+      }
+    }
+  },
+  locations: {
+    selfName: "Ubicación",
+    new: "Nueva ubicación",
+    edit: "Editar ubicación",
+    general: {
+      id: "ID",
+      name: "Nombre",
+    },
+    create: {
+      success: "La ubicacion se ha creado correctamente",
+      validations: {
+        badParams: "El nombre no es valido",
+        editted: "La ubicacion se ha editado correctamente"
+      }
+    }
   },
   products: {
     new: "Nuevo producto",
@@ -46,7 +98,7 @@ export default {
         origin: "Producto de Origen",
         location: "Ubicación",
         images: "Imagenes",
-        categories: "Categorias",
+        categories: "Categorías",
       },
       validations: {
         code: {
@@ -83,7 +135,7 @@ export default {
         origin: "Producto de Origen",
         location: "Ubicación",
         images: "Imagenes",
-        categories: "Categorias",
+        categories: "Categorías",
       },
       validations: {
         code: {

@@ -8,33 +8,32 @@ import promptWithComponent from "./Utilities/promptWithComponent";
 import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 
-function Locations() {
+function Categories() {
   const lang = useContext(Contexts.langContext);
 
-  const [locations, setLocations] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const fetchData = useCallback(async () => {
-    const locationResponse = await Api.get("/locations");
-    setLocations(locationResponse.data);
+    const categoriesResponse = await Api.get("/categories");
+    setCategories(categoriesResponse.data);
   }, []);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const createNewLocation = async () => {
-    const locationName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.new} />
-
+  const createNewCategory = async () => {
+    const categoryName = await promptWithComponent((resolve) => (
+      <NewNamePrompt resolve={resolve} lang={lang} title={lang.categories.new} />
     ));
 
-    if (locationName && locationName.trim() !== "") {
-      await Api.post("/locations", { Name: locationName });
+    if (categoryName && categoryName.trim() !== "") {
+      await Api.post("/categories", { Name: categoryName });
       await fetchData();
-      toast.success(lang.locations.create.success);
+      toast.success(lang.categories.create.success);
     } else {
-      if (locationName !== null) {
-        toast.error(lang.locations.create.validations.badParams);
+      if (categoryName !== null) {
+        toast.error(lang.categories.create.validations.badParams);
       }
     }
   };
@@ -42,23 +41,23 @@ function Locations() {
   return (
     <div className="flex flex-col gap-4">
       <Container className="bg-primary text-white">
-        <Heading level="h1">{lang.navPaths.locations}</Heading>
+        <Heading level="h1">{lang.navPaths.categories}</Heading>
       </Container>
 
       <div className="flex justify-between mt-5">
-        <Button onClick={createNewLocation} variant="secondary">
+        <Button onClick={createNewCategory} variant="secondary">
           <Plus />
-          {lang.locations.new}
+          {lang.categories.new}
         </Button>
       </div>
-      {locations && !locations?.error ? (
+      {categories && !categories?.error ? (
         <AdaptableTable
-          data={locations.map((org) => {
+          data={categories.map((org) => {
             return {
               id: org.id,
               Name: org.Name,
               dropDown: (
-                <LocationDropDown
+                <CategoryDropDown
                   fetchData={fetchData}
                   lang={lang}
                   originId={org.id}
@@ -69,8 +68,8 @@ function Locations() {
           columnModel={{
             order: ["id", "Name", "dropDown"],
             dataModel: {
-              id: lang.locations.general.id,
-              Name: lang.locations.general.name,
+              id: lang.categories.general.id,
+              Name: lang.categories.general.name,
               dropDown: "",
             },
             css: {
@@ -88,30 +87,30 @@ function Locations() {
   );
 }
 
-function LocationDropDown({ originId: locationId, lang, fetchData }) {
+function CategoryDropDown({ originId: categoryId, lang, fetchData }) {
   const editOrigin = async () => {
     const originName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.edit} />
+      <NewNamePrompt resolve={resolve} lang={lang} title={lang.categories.edit} />
     ));
 
     if (originName && originName.trim() !== "") {
-      await Api.patch("/locations/" + locationId, { Name: originName });
+      await Api.patch("/categories/" + categoryId, { Name: originName });
       await fetchData();
-      toast.success(lang.locations.create.validations.editted);
+      toast.success(lang.categories.create.validations.editted);
     } else {
       if (originName !== null) {
-        toast.error(lang.locations.create.validations.badParams);
+        toast.error(lang.categories.create.validations.badParams);
       }
     }
   };
 
-  const deleteOrigin = async () => {
+  const deleteCategory = async () => {
     const confirmed = await promptWithComponent((resolve) => (
       <ConfirmPrompt resolve={resolve} lang={lang} />
     ));
 
     if(confirmed) {
-      await Api.delete("/locations/" + locationId);
+      await Api.delete("/categories/" + categoryId);
       await fetchData();
       toast.success(lang.general.deletedSuccess);
     }
@@ -134,7 +133,7 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
             {lang.general.edit}
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
-          <DropdownMenu.Item onClick={deleteOrigin} className="gap-x-2">
+          <DropdownMenu.Item onClick={deleteCategory} className="gap-x-2">
             <Trash className="text-ui-fg-subtle" />
             {lang.general.delete}
           </DropdownMenu.Item>
@@ -144,4 +143,4 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
   );
 }
 
-export default Locations;
+export default Categories;

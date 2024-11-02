@@ -91,6 +91,8 @@ export default function ProductNew() {
       });
   };
   const saveProduct = async () => {
+    e.target.disabled = true;
+
     if (!validCode) {
       toast.error(lang.products.create.validations.code.notValid);
       return;
@@ -133,6 +135,8 @@ export default function ProductNew() {
           toast.error(lang.products.create.validations.error);
         }
       });
+
+    e.target.disabled = false;
   };
 
   return (
@@ -274,7 +278,6 @@ export default function ProductNew() {
               {lang.products.create.labels.categories}
             </Button>
           </MultiSelect>
-
         </Container>
         <p className="text-sm font-medium ml-2 pb-0.5">{lang.general.images}</p>
         <Container className="flex flex-col gap-4 mb-8">

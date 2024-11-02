@@ -20,10 +20,13 @@ router.get("/", async (req, res) => {
           Description: product.Description,
           Code: product.Code,
           BarCode: product.BarCode,
-          Categories: (await database.query(
-            "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-            [product.id]
-          ).then((categories) => categories?.rows)) ?? [],
+          Categories:
+            (await database
+              .query(
+                "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+                [product.id]
+              )
+              .then((categories) => categories?.rows)) ?? [],
           Images:
             (await database
               .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
@@ -76,10 +79,13 @@ router.get("/:id", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Categories: (await database.query(
-          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-          [product.id]
-        ).then((categories) => categories?.rows)) ?? [],
+        Categories:
+          (await database
+            .query(
+              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+              [product.id]
+            )
+            .then((categories) => categories?.rows)) ?? [],
         Images:
           (await database
             .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
@@ -138,10 +144,13 @@ router.get("/code/:code", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Categories: (await database.query(
-          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-          [product.id]
-        ).then((categories) => categories?.rows)) ?? [],
+        Categories:
+          (await database
+            .query(
+              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+              [product.id]
+            )
+            .then((categories) => categories?.rows)) ?? [],
         Images:
           (await database
             .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
@@ -200,10 +209,13 @@ router.get("/barcode/:barcode", async (req, res) => {
         Description: product.Description,
         Code: product.Code,
         BarCode: product.BarCode,
-        Categories: (await database.query(
-          "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-          [product.id]
-        ).then((categories) => categories?.rows)) ?? [],
+        Categories:
+          (await database
+            .query(
+              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+              [product.id]
+            )
+            .then((categories) => categories?.rows)) ?? [],
         Images:
           (await database
             .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
@@ -378,10 +390,15 @@ router.patch("/:id", async (req, res) => {
     "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId) WHERE id = ?";
 
   const sqlImageInit = "DELETE FROM ProductImages WHERE ProductId = ?";
-  const sqlImageFinish = "INSERT INTO ProductImages (ProductId, ImageId) VALUES (?, ?)";
 
-  const sqlCategoriesInit = "DELETE FROM CategoriesProducts WHERE IdProduct = ?";
-  const sqlCategoriesFinish = "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
+  const sqlImageFinish =
+    "INSERT INTO ProductImages (ProductId, ImageId) VALUES (?, ?)";
+
+  const sqlCategoriesInit =
+    "DELETE FROM CategoriesProducts WHERE IdProduct = ?";
+    
+  const sqlCategoriesFinish =
+    "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
 
   try {
     const dbRes = await database.query(sql, [
@@ -437,11 +454,14 @@ router.delete("/:id", async (req, res) => {
     const dbStockProductRes = await database.query(sqlStock, [req.params.id]);
 
     if (dbStockProductRes.ready) {
+      res.json({
+        success: dbProductRes.ready && dbStockProductRes.ready,
+      });
+    } else {
+      res
+        .status(500)
+        .json({ success: false, error: "Error al eliminar la base de datos" });
     }
-
-    res.json({
-      success: dbProductRes.ready && dbStockProductRes.ready,
-    });
   } catch (e) {
     console.error("Error al eliminar:", e);
     res
