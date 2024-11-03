@@ -4,7 +4,7 @@ export default {
     products: "Productos",
     inventory: "Inventario",
     settings: "Opciones",
-    supplier: "Proveedores",
+    providers: "Proveedores",
     locations: "Ubicaciones",
     categories: "Categorías",
     origins: "Origenes",
@@ -46,6 +46,23 @@ export default {
       }
     }
   },
+  providers: {
+    selfName: "Proveedor",
+    new: "Nuevo proveedor",
+    edit: "Editar proveedor",
+    general: {
+      id: "ID",
+      name: "Nombre",
+      doc: "N. Documento",
+    },
+    create: {
+      success: "El proveedor se ha creado correctamente",
+      validations: {
+        badParams: "El nombre o el N. Documento no es valido",
+        editted: "El proveedor se ha editado correctamente"
+      }
+    }
+  },
   categories: {
     selfName: "Categoría",
     new: "Nueva categoría",
@@ -79,6 +96,7 @@ export default {
     }
   },
   products: {
+    search: "Buscar producto",
     new: "Nuevo producto",
     headers: {
       name: "Nombre",

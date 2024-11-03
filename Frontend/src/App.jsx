@@ -10,6 +10,7 @@ import Locations from "./Components/Locations.jsx";
 import ProductEdit from "./Components/ProductEdit.jsx";
 import Origins from "./Components/Origins.jsx";
 import Categories from "./Components/Categories.jsx";
+import Providers from "./Components/Providers.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -28,6 +29,7 @@ function App() {
               <Route path="/locations" element={<Locations />} />
               <Route path="/origins" element={<Origins />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/providers" element={<Providers />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

@@ -37,8 +37,8 @@ export default function Nav() {
       icon: <box-icon color="white" name="cube-alt"></box-icon>,
     },
     {
-      name: "supplier",
-      path: "/supplier",
+      name: "providers",
+      path: "/providers",
       icon: <box-icon type="solid" color="white" name="contact"></box-icon>,
     },
     {

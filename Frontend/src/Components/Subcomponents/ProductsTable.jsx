@@ -1,11 +1,14 @@
 import Contexts from "../../Sources/Contexts";
-import { useContext, useMemo, useState } from "react";
-import { Table, DropdownMenu, IconButton } from "@medusajs/ui";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Table, DropdownMenu, IconButton, toast, Toaster } from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Eye, Trash } from "@medusajs/icons";
 import seeProduct from "../Utilities/seeProduct";
 import { useNavigate } from "react-router-dom";
+import promptWithComponent from "../Utilities/promptWithComponent";
+import ConfirmPrompt from "../Utilities/confirmPromptComponent";
+import Api from "../../Sources/Api";
 
-export default function ProductsTable({ data }) {
+export default function ProductsTable({ data, fetchData }) {
   const lang = useContext(Contexts.langContext);
 
   // PAGINATION LOGIC
@@ -22,6 +25,10 @@ export default function ProductsTable({ data }) {
       setCurrentPage(currentPage + 1);
     }
   };
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [data]);
 
   const previousPage = () => {
     if (canPreviousPage) {
@@ -58,7 +65,7 @@ export default function ProductsTable({ data }) {
                     {product.Description}
                   </Table.Cell>
                   <Table.Cell>
-                    <ProductDropdown product={product} />
+                    <ProductDropdown fetchData={fetchData} product={product} />
                   </Table.Cell>
                 </Table.Row>
               );
@@ -80,9 +87,22 @@ export default function ProductsTable({ data }) {
   );
 }
 
-export function ProductDropdown({ product }) {
+export function ProductDropdown({ product, fetchData }) {
   const lang = useContext(Contexts.langContext);
   const navigate = useNavigate();
+  
+  const deleteProduct = async () => {
+    const confirmed = await promptWithComponent((resolve) => (
+      <ConfirmPrompt resolve={resolve} lang={lang} />
+    ));
+
+    if(confirmed) {
+      await Api.delete("/products/" + product.id);
+      await fetchData();
+      toast.success(lang.general.deletedSuccess);
+    }
+  };
+
 
   return (
     <>
@@ -110,12 +130,13 @@ export function ProductDropdown({ product }) {
             {lang.general.edit}
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
-          <DropdownMenu.Item className="gap-x-2">
+          <DropdownMenu.Item onClick={deleteProduct} className="gap-x-2">
             <Trash className="text-ui-fg-subtle" />
             {lang.general.delete}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
+      <Toaster />
     </>
   );
 }

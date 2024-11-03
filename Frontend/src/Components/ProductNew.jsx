@@ -90,7 +90,7 @@ export default function ProductNew() {
         }
       });
   };
-  const saveProduct = async () => {
+  const saveProduct = async (e) => {
     e.target.disabled = true;
 
     if (!validCode) {
