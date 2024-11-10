@@ -55,7 +55,7 @@ export default function ProductsTable({ data, fetchData }) {
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((product) => {
               return (
-                <Table.Row className="cursor-pointer" key={product.id}>
+                <Table.Row key={product.id}>
                   <Table.Cell>{product.id}</Table.Cell>
                   <Table.Cell className="w-1/5">{product.Code}</Table.Cell>
                   <Table.Cell className="w-1/3 truncate">

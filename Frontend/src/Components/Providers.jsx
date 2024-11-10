@@ -8,13 +8,12 @@ import {
   DropdownMenu,
   Heading,
   IconButton,
+  Input,
   toast,
   Toaster,
-  usePrompt,
 } from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Plus, Trash } from "@medusajs/icons";
 import promptWithComponent from "./Utilities/promptWithComponent";
-import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 import FormPromptComponent from "./Subcomponents/FormPromptComponent";
 
@@ -22,6 +21,7 @@ function Providers() {
   const lang = useContext(Contexts.langContext);
 
   const [providers, setOrigins] = useState([]);
+  const [search, setSearch] = useState("");
 
   const fetchData = useCallback(async () => {
     const originsResponse = await Api.get("/providers");
@@ -79,22 +79,36 @@ function Providers() {
           {lang.providers.new}
         </Button>
       </div>
+      <div className="justify-between mt-5 w-full">
+        <Input
+          placeholder={lang.general.search}
+          className="w-1/4"
+          type="search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       {providers && !providers?.error ? (
         <AdaptableTable
-          data={providers.map((prv) => {
-            return {
-              id: prv.id,
-              Name: prv.Name,
-              Doc: prv.Doc,
-              dropDown: (
-                <ProviderDropDown
-                  fetchData={fetchData}
-                  lang={lang}
-                  provider={prv}
-                />
-              ),
-            };
-          })}
+          data={providers
+            .filter(
+              (itm) =>
+                itm.Name.toLowerCase().includes(search.toLowerCase()) ||
+                itm.Doc.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((prv) => {
+              return {
+                id: prv.id,
+                Name: prv.Name,
+                Doc: prv.Doc,
+                dropDown: (
+                  <ProviderDropDown
+                    fetchData={fetchData}
+                    lang={lang}
+                    provider={prv}
+                  />
+                ),
+              };
+            })}
           columnModel={{
             order: ["id", "Name", "Doc", "dropDown"],
             dataModel: {
@@ -125,16 +139,33 @@ function ProviderDropDown({ provider, lang, fetchData }) {
       <FormPromptComponent
         resolve={resolve}
         lang={lang}
-        title={lang.providers.new}
+        title={lang.providers.edit}
         fields={[
-          { nameProp: "name", label: lang.providers.general.name, type: "text", defaultValue: provider.Name },
-          { nameProp: "doc", label: lang.providers.general.doc, type: "text", defaultValue: provider.Doc },
+          {
+            nameProp: "name",
+            label: lang.providers.general.name,
+            type: "text",
+            defaultValue: provider.Name,
+          },
+          {
+            nameProp: "doc",
+            label: lang.providers.general.doc,
+            type: "text",
+            defaultValue: provider.Doc,
+          },
         ]}
       />
     ));
 
-    if (edittedProvider && edittedProvider.name.trim() !== "" && edittedProvider.doc.trim() !== "") {
-      await Api.patch("/providers/" + provider.id, { Name: edittedProvider.name, Doc: edittedProvider.doc });
+    if (
+      edittedProvider &&
+      edittedProvider.name.trim() !== "" &&
+      edittedProvider.doc.trim() !== ""
+    ) {
+      await Api.patch("/providers/" + provider.id, {
+        Name: edittedProvider.name,
+        Doc: edittedProvider.doc,
+      });
       await fetchData();
       toast.success(lang.providers.create.validations.editted);
     } else {

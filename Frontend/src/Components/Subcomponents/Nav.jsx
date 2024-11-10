@@ -24,12 +24,14 @@ export default function Nav() {
     {
       name: "categories",
       path: "/categories",
-      icon: <box-icon type='solid' color="white" name='category-alt'></box-icon>,
+      icon: (
+        <box-icon type="solid" color="white" name="category-alt"></box-icon>
+      ),
     },
     {
       name: "origins",
       path: "/origins",
-      icon: <box-icon type='solid' name='map-alt' color='white'></box-icon>,
+      icon: <box-icon type="solid" name="map-alt" color="white"></box-icon>,
     },
     {
       name: "locations",
@@ -55,7 +57,7 @@ export default function Nav() {
     <>
       <button
         className={
-          "w-20 h-10 z-10 shadow-lg justify-center items-center sticky top-4 left-8 md:hidden rounded-full bg-primary flex"
+          "w-20 h-10 z-10 shadow-lg justify-center items-center sticky top-4 left-8 md:hidden transition-[background] rounded-full bg-primary flex"
         }
         onClick={() => setHidden(false)}
       >
@@ -81,7 +83,7 @@ export default function Nav() {
               setHidden(true);
             }}
             className={
-              "w-full h-10 rounded-lg flex bg-secondary/50 hover:bg-secondary justify-start px-8 items-center gap-3 " +
+              "w-full h-10 rounded-lg flex bg-secondary/50 transition-all hover:bg-secondary justify-start px-8 items-center gap-3 " +
               route.css
             }
             key={index}

@@ -45,7 +45,7 @@ export default function Products() {
           <Input
             placeholder={lang.products.search}
             className="w-1/4"
-            type="number"
+            type="search"
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>

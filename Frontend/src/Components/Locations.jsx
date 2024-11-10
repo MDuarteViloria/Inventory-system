@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import AdaptableTable from "./Subcomponents/AdaptableTable";
 import Api from "../Sources/Api";
-import { Button, Container, DropdownMenu, Heading, IconButton, toast, Toaster, usePrompt } from "@medusajs/ui";
+import { Button, Container, DropdownMenu, Heading, IconButton, toast, Toaster, Input } from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Plus, Trash } from "@medusajs/icons";
 import promptWithComponent from "./Utilities/promptWithComponent";
 import NewNamePrompt from "./Subcomponents/NewNameComponent";
@@ -12,6 +12,7 @@ function Locations() {
   const lang = useContext(Contexts.langContext);
 
   const [locations, setLocations] = useState([]);
+  const [search, setSearch] = useState("");
 
   const fetchData = useCallback(async () => {
     const locationResponse = await Api.get("/locations");
@@ -51,9 +52,17 @@ function Locations() {
           {lang.locations.new}
         </Button>
       </div>
+      <div className="justify-between mt-5 w-full">
+          <Input
+            placeholder={lang.general.search}
+            className="w-1/4"
+            type="search"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       {locations && !locations?.error ? (
         <AdaptableTable
-          data={locations.map((org) => {
+          data={locations.filter(itm => itm.Name.toLowerCase().includes(search.toLowerCase())).map((org) => {
             return {
               id: org.id,
               Name: org.Name,

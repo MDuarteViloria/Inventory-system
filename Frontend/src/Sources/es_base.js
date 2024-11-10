@@ -17,6 +17,7 @@ export default {
   general: {
     export: "Exportar",
     cancel: "Cancelar",
+    search: "Buscar...",
     save: "Guardar",
     add: "Añadir",
     searchInput: "Buscar...",

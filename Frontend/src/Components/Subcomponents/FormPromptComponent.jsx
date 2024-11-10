@@ -18,30 +18,32 @@ export default function FormPromptComponent({
 
   const renderFields = () => {
     return fields.map((field) => {
+      const components = {
+        select: (
+          <Select
+            onValueChange={(value) => changeProp(field.nameProp, value)}
+            {...field}
+          >
+            <Select.Trigger>
+              <Select.Value placeholder={field.label} />
+            </Select.Trigger>
+            <Select.Content>
+              {field?.values?.map((value) => (
+                <Select.Item value={value.item}>{value.label}</Select.Item>
+              ))}
+            </Select.Content>
+          </Select>
+        ),
+        currency: (
+          <CurrencyInput
+            onChange={(e) => changeProp(field.nameProp, e.target.value)}
+            {...field}
+          />
+        ),
+      };
+
       return (
-        {
-          select: (
-            <Select
-              onValueChange={(value) => changeProp(field.nameProp, value)}
-              {...field}
-            >
-              <Select.Trigger>
-                <Select.Value placeholder={field.label} />
-              </Select.Trigger>
-              <Select.Content>
-                {field?.values?.map((value) => (
-                  <Select.Item value={value.item}>{value.label}</Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          ),
-          currency: (
-            <CurrencyInput
-              onChange={(e) => changeProp(field.nameProp, e.target.value)}
-              {...field}
-            />
-          ),
-        }[field.type] ?? (
+        components[field.type] ?? (
           <Input
             onChange={(e) => changeProp(field.nameProp, e.target.value)}
             type={field.type}
