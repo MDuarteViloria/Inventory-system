@@ -11,6 +11,7 @@ import ProductEdit from "./Components/ProductEdit.jsx";
 import Origins from "./Components/Origins.jsx";
 import Categories from "./Components/Categories.jsx";
 import Providers from "./Components/Providers.jsx";
+import Inventory from "./Components/Inventory.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -30,6 +31,7 @@ function App() {
               <Route path="/origins" element={<Origins />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/providers" element={<Providers />} />
+              <Route path="/inventory" element={<Inventory />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

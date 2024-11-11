@@ -36,11 +36,15 @@ body {
   }
 
   .pseudo-button {
-    @apply caret-ui-fg-base bg-ui-bg-field hover:bg-neutral-200 hover:drop-shadow-sm shadow-borders-base placeholder-ui-fg-muted text-ui-fg-base transition-fg relative w-full appearance-none rounded-md outline-none cursor-pointer focus-visible:shadow-borders-interactive-with-active disabled:text-ui-fg-disabled disabled:!bg-ui-bg-disabled disabled:placeholder-ui-fg-disabled disabled:cursor-not-allowed aria-[invalid=true]:!shadow-borders-error invalid:!shadow-borders-error [&::--webkit-search-cancel-button]:hidden [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden txt-compact-small h-8 py-1.5 px-2
+    @apply caret-ui-fg-base bg-ui-bg-field hover:bg-neutral-200 hover:drop-shadow-sm shadow-borders-base placeholder-ui-fg-muted text-ui-fg-base transition-fg relative w-full appearance-none rounded-md outline-none cursor-pointer focus-visible:shadow-borders-interactive-with-active disabled:text-ui-fg-disabled disabled:!bg-ui-bg-disabled disabled:placeholder-ui-fg-disabled disabled:cursor-not-allowed aria-[invalid=true]:!shadow-borders-error invalid:!shadow-borders-error [&::--webkit-search-cancel-button]:hidden [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden txt-compact-small h-8 py-1.5 px-2;
   }
 
   .container-responsive-wrap {
     @apply [&_>div]:flex [&_>div]:justify-between [&_>div]:flex-grow [&_>div]:gap-5 [&_>div]:min-w-max [&_>div]:w-min [&_>div]:mx-0 [&_>div]:py-10;
+  }
+
+  .container-button {
+    @apply !bg-gradient-to-tr from-slate-50 to-white [&_>*]:hover:scale-105 cursor-pointer [&_>*]:transition-all transition-all hover:brightness-95;
   }
 }
 

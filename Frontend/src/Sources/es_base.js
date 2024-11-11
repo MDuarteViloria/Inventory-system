@@ -64,6 +64,20 @@ export default {
       }
     }
   },
+  inventory: {
+    general: {
+      id: "ID",
+      name: "Nombre",
+      quantity: "Cantidad",
+      status: "Estado",
+    },
+    entry: "Entrada de Inventario",
+    output: "Salida de Inventario",
+    stock: {
+      true: "Disponible",
+      false: "No disponible",
+    }
+  },
   categories: {
     selfName: "Categoría",
     new: "Nueva categoría",

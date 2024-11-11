@@ -20,12 +20,12 @@ import FormPromptComponent from "./Subcomponents/FormPromptComponent";
 function Providers() {
   const lang = useContext(Contexts.langContext);
 
-  const [providers, setOrigins] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [search, setSearch] = useState("");
 
   const fetchData = useCallback(async () => {
-    const originsResponse = await Api.get("/providers");
-    setOrigins(originsResponse.data);
+    const providersResponse = await Api.get("/providers");
+    setProviders(providersResponse.data);
   }, []);
 
   useEffect(() => {

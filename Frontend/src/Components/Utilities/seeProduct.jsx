@@ -9,7 +9,7 @@ export default async function seeProduct(product, lang) {
 
   const root = createRoot(div);
 
-  return await new Promise((resolve, reject) => {
+  return await new Promise((resolve) => {
     root.render(<SeeProduct lang={lang} resolve={resolve} data={product} />);
   }).then((selected) => {
     setTimeout(() => {

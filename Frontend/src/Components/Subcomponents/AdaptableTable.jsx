@@ -10,6 +10,9 @@ function AdaptableTable({
     css: {
       Name: "w-full"
     },
+    cssRow: {
+      Name: "text-left"
+    },
     dataModel: {
       Name: "Nombre",
       id: "ID",
@@ -57,7 +60,7 @@ function AdaptableTable({
           {data.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((row, i) => (
             <Table.Row key={i}>
               {columnModel.order.map((column, j) => (
-                <Table.Cell key={j}>{row[column]}</Table.Cell>
+                <Table.Cell className={columnModel.cssRow && columnModel.cssRow[column]} key={j}>{row[column]}</Table.Cell>
               ))}
             </Table.Row>
           ))}

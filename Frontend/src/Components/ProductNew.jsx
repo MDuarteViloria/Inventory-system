@@ -91,8 +91,6 @@ export default function ProductNew() {
       });
   };
   const saveProduct = async (e) => {
-    e.target.disabled = true;
-
     if (!validCode) {
       toast.error(lang.products.create.validations.code.notValid);
       return;
@@ -107,6 +105,8 @@ export default function ProductNew() {
       toast.error(lang.products.create.validations.badParams);
       return;
     }
+
+    e.target.disabled = true;
 
     const productBody = {
       Name: product.title,
@@ -135,8 +135,6 @@ export default function ProductNew() {
           toast.error(lang.products.create.validations.error);
         }
       });
-
-    e.target.disabled = false;
   };
 
   return (

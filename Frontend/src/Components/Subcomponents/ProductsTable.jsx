@@ -90,19 +90,18 @@ export default function ProductsTable({ data, fetchData }) {
 export function ProductDropdown({ product, fetchData }) {
   const lang = useContext(Contexts.langContext);
   const navigate = useNavigate();
-  
+
   const deleteProduct = async () => {
     const confirmed = await promptWithComponent((resolve) => (
       <ConfirmPrompt resolve={resolve} lang={lang} />
     ));
 
-    if(confirmed) {
+    if (confirmed) {
       await Api.delete("/products/" + product.id);
       await fetchData();
       toast.success(lang.general.deletedSuccess);
     }
   };
-
 
   return (
     <>
@@ -114,14 +113,23 @@ export function ProductDropdown({ product, fetchData }) {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Item
-            onClick={() => {
-              seeProduct(product, lang);
+            onClick={async () => {
+              let seeProductData = product;
+
+              if (!fetchData)
+                seeProductData = await Api.get("/products/" + product.id).then(
+                  (res) => res.data
+                );
+
+              seeProduct(seeProductData, lang);
             }}
             className="gap-x-2"
           >
             <Eye className="text-ui-fg-subtle" />
             {lang.general.see}
           </DropdownMenu.Item>
+          {fetchData && (
+            <>
           <DropdownMenu.Item
             onClick={() => navigate("/products/edit/" + product.id)}
             className="gap-x-2"
@@ -129,11 +137,13 @@ export function ProductDropdown({ product, fetchData }) {
             <PencilSquare className="text-ui-fg-subtle" />
             {lang.general.edit}
           </DropdownMenu.Item>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Item onClick={deleteProduct} className="gap-x-2">
-            <Trash className="text-ui-fg-subtle" />
-            {lang.general.delete}
-          </DropdownMenu.Item>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Item onClick={deleteProduct} className="gap-x-2">
+                <Trash className="text-ui-fg-subtle" />
+                {lang.general.delete}
+              </DropdownMenu.Item>
+            </>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu>
       <Toaster />

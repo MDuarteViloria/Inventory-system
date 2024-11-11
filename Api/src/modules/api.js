@@ -10,6 +10,7 @@ import routerOrigins from "./routers/origins.js "
 import routerLocations from "./routers/locations.js"
 import routerCategories from "./routers/categories.js"
 import routerProviders from "./routers/providers.js"
+import routerInventory from "./routers/inventory.js"
 
 export function createServer() {
   const app = express();
@@ -27,6 +28,7 @@ export function createServer() {
   app.use("/origins", routerOrigins)
   app.use("/categories", routerCategories)
   app.use("/providers", routerProviders)
+  app.use("/inventory", routerInventory)
 
   // Abrir servidor.
   app.listen(config.port, () =>
