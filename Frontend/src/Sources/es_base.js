@@ -16,6 +16,7 @@ export default {
   },
   general: {
     export: "Exportar",
+    import: "Importar",
     cancel: "Cancelar",
     search: "Buscar...",
     save: "Guardar",

@@ -5,7 +5,5 @@ import './assets/App.css'
 import "boxicons";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <App />
-  </StrictMode>,
 )

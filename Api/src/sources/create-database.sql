@@ -5,7 +5,9 @@ CREATE TABLE 'Products' (
 'Code' VARCHAR(64) DEFAULT NULL,
 'BarCode' VARCHAR(64) DEFAULT NULL,
 'OriginProductId' INTEGER DEFAULT NULL REFERENCES 'OriginProducts' ('id'),
-'LocationId' INTEGER DEFAULT NULL REFERENCES 'Locations' ('id')
+'LocationId' INTEGER DEFAULT NULL REFERENCES 'Locations' ('id'),
+'ModifyDate' DATETIME DEFAULT NULL
+'Deleted' BOOLEAN DEFAULT FALSE,
 );
 
 CREATE TABLE 'StockProducts' (

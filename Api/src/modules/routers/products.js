@@ -7,7 +7,7 @@ const router = express.Router();
 // GET ALL
 router.get("/", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products";
+  const sql = "SELECT * FROM Products WHERE Deleted = FALSE";
   const database = new DB();
 
   try {
@@ -65,7 +65,7 @@ router.get("/", async (req, res) => {
 // GET ONE BY ID
 router.get("/:id", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE id = ?";
+  const sql = "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE";
   const database = new DB();
 
   try {
@@ -130,7 +130,7 @@ router.get("/:id", async (req, res) => {
 // GET ONE BY CODE
 router.get("/code/:code", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE Code = ?";
+  const sql = "SELECT * FROM Products WHERE Code = ? AND Deleted = FALSE";
   const database = new DB();
 
   try {
@@ -195,7 +195,7 @@ router.get("/code/:code", async (req, res) => {
 // GET ONE BY CODE
 router.get("/barcode/:barcode", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE BarCode = ?";
+  const sql = "SELECT * FROM Products WHERE BarCode = ? AND Deleted = FALSE";
   const database = new DB();
 
   try {
@@ -279,7 +279,7 @@ router.post("/", async (req, res) => {
   const database = new DB();
 
   if (Code) {
-    const sql = "SELECT * FROM Products WHERE (Code = ?)";
+    const sql = "SELECT * FROM Products WHERE (Code = ?) AND Deleted = FALSE";
     const data = await database.query(sql, [Code]);
     if (data.rows[0]) {
       return res
@@ -289,7 +289,7 @@ router.post("/", async (req, res) => {
   }
 
   if (BarCode) {
-    const sql = "SELECT * FROM Products WHERE (BarCode = ?)";
+    const sql = "SELECT * FROM Products WHERE (BarCode = ?) AND Deleted = FALSE";
     const data = await database.query(sql, [BarCode]);
     if (data.rows[0]) {
       return res
@@ -299,7 +299,7 @@ router.post("/", async (req, res) => {
   }
 
   const sql =
-    "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId) VALUES (?, ?, ?, ?, ?, ?)";
+    "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId, ModifyDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, DATE()(), FALSE)";
 
   const sqlStock =
     "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
@@ -367,7 +367,7 @@ router.patch("/:id", async (req, res) => {
   const database = new DB();
 
   if (Code) {
-    const sql = "SELECT * FROM Products WHERE (Code = ?) AND id <> ?";
+    const sql = "SELECT * FROM Products WHERE (Code = ?) AND id <> ? AND Deleted = FALSE";
     const data = await database.query(sql, [Code, req.params.id]);
     if (data.rows[0]) {
       return res
@@ -377,7 +377,7 @@ router.patch("/:id", async (req, res) => {
   }
 
   if (BarCode) {
-    const sql = "SELECT * FROM Products WHERE (BarCode = ?) AND id <> ?";
+    const sql = "SELECT * FROM Products WHERE (BarCode = ?) AND id <> ? AND Deleted = FALSE";
     const data = await database.query(sql, [BarCode, req.params.id]);
     if (data.rows[0]) {
       return res
@@ -387,7 +387,7 @@ router.patch("/:id", async (req, res) => {
   }
 
   const sql =
-    "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId) WHERE id = ?";
+    "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId), ModifyDate = DATE()() WHERE id = ?";
 
   const sqlImageInit = "DELETE FROM ProductImages WHERE ProductId = ?";
 
@@ -446,7 +446,7 @@ router.patch("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const database = new DB();
 
-  const sql = "DELETE FROM Products WHERE id = ?";
+  const sql = "UPDATE Products SET Deleted = TRUE, ModifyDate = DATE() WHERE id = ? AND Deleted = FALSE";
   const sqlStock = "DELETE FROM StockProducts WHERE ProductId = ?";
 
   try {

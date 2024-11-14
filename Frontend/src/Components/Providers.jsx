@@ -79,7 +79,7 @@ function Providers() {
           {lang.providers.new}
         </Button>
       </div>
-      <div className="justify-between mt-5 w-full">
+      <div className="justify-between mt-5 w-full [&_>div_input]:min-w-[150px]">
         <Input
           placeholder={lang.general.search}
           className="w-1/4"

@@ -41,11 +41,14 @@ export default function Inventory() {
       </Container>
       <div className="flex gap-4 mt-5 text-center">
         {headButtons.map((btn, index) => (
-          <Container key={index} className="container-button">
+          <Container
+            onClick={btn.onClick}
+            key={index}
+            className="container-button [&_*]:leading-none md:p-8 p-4"
+          >
             <Heading
-              className="font-medium"
+              className="text-gray-700 font-medium md:text-base text-sm"
               level="h2"
-              onClick={btn.onClick}
             >
               {btn.title}
             </Heading>
@@ -79,11 +82,11 @@ export default function Inventory() {
                 Quantity: stk.Quantity,
                 Status:
                   stk.Quantity > 0 ? (
-                    <StatusBadge color="green">
+                    <StatusBadge color="green" className="text-center">
                       {lang.inventory.stock.true}
                     </StatusBadge>
                   ) : (
-                    <StatusBadge color="red">
+                    <StatusBadge color="red" className="text-center">
                       {lang.inventory.stock.false}
                     </StatusBadge>
                   ),

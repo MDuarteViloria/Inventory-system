@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import api from "../Sources/Api";
 import Contexts from "../Sources/Contexts";
 import { Container, Heading, Button, Input } from "@medusajs/ui";
-import { Plus, DocumentText } from "@medusajs/icons";
+import { Plus, CloudArrowDown, CloudArrowUp } from "@medusajs/icons";
 import { useNavigate } from "react-router-dom";
 import ProductsTable from "./Subcomponents/ProductsTable";
 
@@ -31,17 +31,23 @@ export default function Products() {
         <Container className="bg-primary text-white">
           <Heading level="h1">{lang.navPaths.products}</Heading>
         </Container>
-        <div className="flex justify-between mt-5">
+        <div className="flex gap-4 flex-wrap justify-between mt-5 [&_*]:leading-none">
           <Button onClick={() => navigate("/products/new")} variant="secondary">
             <Plus />
             {lang.products.new}
           </Button>
-          <Button variant="secondary">
-            <DocumentText />
-            {lang.general.export}
-          </Button>
+          <span className="flex gap-4">
+            <Button variant="secondary">
+              <CloudArrowDown />
+              {lang.general.export}
+            </Button>
+            <Button variant="secondary">
+              <CloudArrowUp />
+              {lang.general.import}
+            </Button>
+          </span>
         </div>
-        <div className="justify-between mt-5 w-full">
+        <div className="justify-between mt-5 w-full [&_>div_input]:min-w-[150px]">
           <Input
             placeholder={lang.products.search}
             className="w-1/4"
@@ -51,10 +57,17 @@ export default function Products() {
         </div>
         <ProductsTable
           fetchData={fetchData}
-          data={data.filter((item) =>
-            item.Name.toLowerCase()?.trim().includes(search.toLowerCase()?.trim()) || 
-            item.BarCode?.toLowerCase()?.trim()?.includes(search.toLowerCase()?.trim()) ||
-            item.Code?.toLowerCase()?.trim()?.includes(search.toLowerCase().trim())
+          data={data.filter(
+            (item) =>
+              item.Name.toLowerCase()
+                ?.trim()
+                .includes(search.toLowerCase()?.trim()) ||
+              item.BarCode?.toLowerCase()
+                ?.trim()
+                ?.includes(search.toLowerCase()?.trim()) ||
+              item.Code?.toLowerCase()
+                ?.trim()
+                ?.includes(search.toLowerCase().trim())
           )}
         />
       </div>
