@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Locations'
   const sql =
-    "SELECT P.id, SP.Quantity, P.Name, P.Description, P.Code, P.BarCode, P.LocationId, P.OriginProductId FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId";
+    "SELECT P.id, SP.Quantity, P.Name, P.Description, P.Code, P.BarCode, P.LocationId, P.OriginProductId FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId WHERE P.Deleted = FALSE";
   const database = new DB();
 
   try {
@@ -22,12 +22,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/entry", async () => {
-  
-})
+router.post("/entry", async () => {});
 
-router.post("/output", async () => {
-
-})
+router.post("/output", async () => {});
 
 export default router;
