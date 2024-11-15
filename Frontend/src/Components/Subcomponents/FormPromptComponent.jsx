@@ -1,5 +1,8 @@
 import { Prompt, Input, Select, CurrencyInput } from "@medusajs/ui";
 import { useState } from "react";
+import Selector from "./Selector";
+import ImageSelector from "./ImageSelector";
+import Contexts from "../../Sources/Contexts";
 
 export default function FormPromptComponent({
   resolve,
@@ -27,9 +30,9 @@ export default function FormPromptComponent({
             <Select.Trigger>
               <Select.Value placeholder={field.label} />
             </Select.Trigger>
-            <Select.Content>
-              {field?.values?.map((value) => (
-                <Select.Item value={value.item}>{value.label}</Select.Item>
+            <Select.Content className="z-30">
+              {field?.values?.map((v) => (
+                <Select.Item value={v.item}>{v.label}</Select.Item>
               ))}
             </Select.Content>
           </Select>
@@ -39,6 +42,26 @@ export default function FormPromptComponent({
             onChange={(e) => changeProp(field.nameProp, e.target.value)}
             {...field}
           />
+        ),
+        selector: (
+          <Selector
+            showValue={
+              dataFields[field.nameProp][
+                field?.selectorData && field?.selectorData[0]
+              ]
+            }
+            changeProperty={(value) => changeProp(field.nameProp, value)}
+            {...field}
+          />
+        ),
+        images: (
+          <Contexts.langContext.Provider value={lang}>
+            <ImageSelector
+              receivedLang={lang}
+              count={dataFields[field.nameProp]?.length}
+              onSelected={(value) => changeProp(field.nameProp, value)}
+            />
+          </Contexts.langContext.Provider>
         ),
       };
 

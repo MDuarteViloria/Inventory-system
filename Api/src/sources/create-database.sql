@@ -13,7 +13,8 @@ CREATE TABLE 'Products' (
 CREATE TABLE 'StockProducts' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'Quantity' INTEGER(10) NOT NULL  DEFAULT 0,
-'ProductId' INTEGER(10) NOT NULL  DEFAULT NULL REFERENCES 'Products' ('id')
+'ProductId' INTEGER(10) NOT NULL  DEFAULT NULL REFERENCES 'Products' ('id'),
+'ModifyDate' DATETIME DEFAULT NULL
 );
 
 CREATE TABLE 'OriginProducts' (
@@ -49,7 +50,7 @@ CREATE TABLE 'EntriesLines' (
 'Quantity' INTEGER DEFAULT NULL,
 'Details' VARCHAR(256) DEFAULT NULL,
 'ProductId' INTEGER DEFAULT NULL REFERENCES 'Products' ('id') REFERENCES 'Products' ('id'),
-'EntryHeaderId' INTEGER DEFAULT NULL REFERENCES 'EntriesHeaders' ('id') REFERENCES 'EntriesHeaders' ('id'),
+'EntryHeaderId' INTEGER DEFAULT NULL REFERENCES 'EntriesHeaders' ('id') REFERENCES 'EntriesHeaders' ('id') ON DELETE CASCADE,
 'ProviderId' INTEGER DEFAULT NULL REFERENCES 'Providers' ('id')
 );
 
@@ -65,7 +66,7 @@ CREATE TABLE 'OutputsLines' (
 'Quantity' DECIMAL(19,6) DEFAULT NULL,
 'Details' VARCHAR(256) DEFAULT NULL,
 'ProductId' INTEGER DEFAULT NULL REFERENCES 'Products' ('id'),
-'OutputHeaderId' INTEGER DEFAULT NULL REFERENCES 'OutputsHeaders' ('id')
+'OutputHeaderId' INTEGER DEFAULT NULL REFERENCES 'OutputsHeaders' ('id') ON DELETE CASCADE
 );
 
 CREATE TABLE 'Providers' (
@@ -100,5 +101,5 @@ CREATE TABLE 'EntriesImages' (
 CREATE TABLE 'OutputsImages' (
 'id' INTEGER DEFAULT NULL PRIMARY KEY AUTOINCREMENT,
 'OutputId' INTEGER DEFAULT NULL REFERENCES 'OutputsLines' ('id'),
-'ImageId' INTEGER DEFAULT NULL REFERENCES 'Images' ('id')
+'ImageId' INTEGER DEFAULT NULL REFERENCES 'Images' ('id') ON DELETE CASCADE
 );

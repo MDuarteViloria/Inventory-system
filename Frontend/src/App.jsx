@@ -12,6 +12,7 @@ import Origins from "./Components/Origins.jsx";
 import Categories from "./Components/Categories.jsx";
 import Providers from "./Components/Providers.jsx";
 import Inventory from "./Components/Inventory.jsx";
+import InventoryEntry from "./Components/InventoryEntry.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -32,6 +33,7 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/providers" element={<Providers />} />
               <Route path="/inventory" element={<Inventory />} />
+              <Route path="/inventory/entry" element={<InventoryEntry />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

@@ -6,7 +6,7 @@ import Contexts from "../../Sources/Contexts";
 import api from "../../Sources/Api";
 import selectImages from "../Utilities/selectImage";
 
-export default function ImageSelector({onSelected, label}) {
+export default function ImageSelector({onSelected, label, count=null}) {
   const lang = useContext(Contexts.langContext);
 
   const getData = async () => {
@@ -50,7 +50,7 @@ export default function ImageSelector({onSelected, label}) {
         }}
         className="w-full"
       >
-        {lang.products.create.placeholders.images}
+        {lang.products.create.placeholders.images} {count !== null && `(${count})`}
       </Button>
     </InputLabel>
   );
