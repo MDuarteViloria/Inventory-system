@@ -13,6 +13,7 @@ import Categories from "./Components/Categories.jsx";
 import Providers from "./Components/Providers.jsx";
 import Inventory from "./Components/Inventory.jsx";
 import InventoryEntry from "./Components/InventoryEntry.jsx";
+import InventoryEntryNew from "./Components/InventoryEntryNew.jsx";
 
 function App() {
   const [lang, setLang] = useState(es_base);
@@ -33,7 +34,8 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/providers" element={<Providers />} />
               <Route path="/inventory" element={<Inventory />} />
-              <Route path="/inventory/entry" element={<InventoryEntry />} />
+              <Route path="/inventory/entries" element={<InventoryEntry />} />
+              <Route path="/inventory/entries/new" element={<InventoryEntryNew />} />
             </Routes>
           </PrincipalLayout>
         </BrowserRouter>

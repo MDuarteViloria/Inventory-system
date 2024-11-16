@@ -3,11 +3,13 @@ import { useState } from "react";
 import Selector from "./Selector";
 import ImageSelector from "./ImageSelector";
 import Contexts from "../../Sources/Contexts";
+import InputLabel from "./Label";
 
 export default function FormPromptComponent({
   resolve,
   lang,
   title,
+  recursive,
   fields = [{ nameProp: "name", label: "Nombre", type: "text" }],
 }) {
   const [dataFields, setDataFields] = useState(
@@ -65,16 +67,30 @@ export default function FormPromptComponent({
         ),
       };
 
-      return (
-        components[field.type] ?? (
-          <Input
-            onChange={(e) => changeProp(field.nameProp, e.target.value)}
-            type={field.type}
-            placeholder={field?.label}
-            {...field}
-          />
-        )
-      );
+      if (field.topLabel)
+        return (
+          <InputLabel className={"italic"} label={field.topLabel}>
+            {components[field.type] ?? (
+              <Input
+                onChange={(e) => changeProp(field.nameProp, e.target.value)}
+                type={field.type}
+                placeholder={field?.label}
+                {...field}
+              />
+            )}
+          </InputLabel>
+        );
+      else
+        return (
+          components[field.type] ?? (
+            <Input
+              onChange={(e) => changeProp(field.nameProp, e.target.value)}
+              type={field.type}
+              placeholder={field?.label}
+              {...field}
+            />
+          )
+        );
     });
   };
 
@@ -97,7 +113,7 @@ export default function FormPromptComponent({
           </Prompt.Header>
           <Prompt.Footer>
             <Prompt.Cancel onClick={() => resolve(null)}>
-              {lang.general.cancel}
+              {recursive ? lang.general.exit : lang.general.cancel}
             </Prompt.Cancel>
             <Prompt.Action onClick={() => resolve(dataFields)}>
               {lang.general.save}

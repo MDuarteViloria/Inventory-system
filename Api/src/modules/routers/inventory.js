@@ -5,7 +5,6 @@ const router = express.Router();
 
 // GET ALL
 router.get("/", async (req, res) => {
-  // Consulta SQL para obtener los datos de la tabla 'Locations'
   const sql =
     "SELECT P.id, SP.Quantity, P.Name, P.Description, P.Code, P.BarCode, P.LocationId, P.OriginProductId FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId WHERE P.Deleted = FALSE";
   const database = new DB();
@@ -22,7 +21,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/entry", async (req, res) => {
+router.get("/entries", async (req, res) => {
+  const sql =
+    "SELECT id, User, Description, Date FROM EntriesHeaders ORDER BY Date DESC";
+  const database = new DB();
+
+  try {
+    let data = await database.query(sql);
+
+    res.json(data.rows);
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(404).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
+  }
+});
+
+router.post("/entries", async (req, res) => {
   const { Lines, Description, User } = req.body;
 
   if (!Lines || (!Description && Description !== "") || !User) {
@@ -111,13 +127,13 @@ router.post("/entry", async (req, res) => {
   } catch (e) {
     await database.query("DELETE FROM EntriesHeaders WHERE id = ?", [headerId]);
     console.error("Error al consultar:", e);
-    res.status(400).send({error: e.message});
+    res.status(400).send({ error: e.message });
   } finally {
     database.close();
   }
 });
 
-router.post("/output", async (req, res) => {
+router.post("/outputs", async (req, res) => {
   const { Lines, Description, User } = req.body;
 
   if (!Lines || (!Description && Description !== "") || !User) {
@@ -175,9 +191,11 @@ router.post("/output", async (req, res) => {
               (await database
                 .query(getActualStockSql, [line.ProductId])
                 .then((result) => {
-                  return (result.rows[0] && result.rows[0].Quantity >= l.Quantity) ?? false;
-                }
-                )) ?? false
+                  return (
+                    (result.rows[0] && result.rows[0].Quantity >= l.Quantity) ??
+                    false
+                  );
+                })) ?? false
             );
           })
         ).then((allInStock) => allInStock.every((x) => x)))
@@ -220,7 +238,7 @@ router.post("/output", async (req, res) => {
   } catch (e) {
     await database.query("DELETE FROM OutputsHeaders WHERE id = ?", [headerId]);
     console.error("Error al consultar:", e);
-    res.status(400).send({error: e.message});
+    res.status(400).send({ error: e.message });
   } finally {
     database.close();
   }

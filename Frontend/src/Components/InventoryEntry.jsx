@@ -1,114 +1,35 @@
-import {
-  Button,
-  Container,
-  Heading,
-  Input,
-  StatusBadge,
-  Textarea,
-  toast,
-  Toaster,
-} from "@medusajs/ui";
 import { useCallback, useContext, useEffect, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import AdaptableTable from "./Subcomponents/AdaptableTable";
 import Api from "../Sources/Api";
-import { useNavigate } from "react-router-dom";
-import { ProductDropdown } from "./Subcomponents/ProductsTable";
-import { DocumentText, Plus } from "@medusajs/icons";
-import Selector from "./Subcomponents/Selector";
-import InputLabel from "./Subcomponents/Label";
+import {
+  Button,
+  Container,
+  DropdownMenu,
+  Heading,
+  IconButton,
+  toast,
+  Toaster,
+  Input,
+} from "@medusajs/ui";
+import { EllipsisHorizontal, PencilSquare, Plus, Trash } from "@medusajs/icons";
 import promptWithComponent from "./Utilities/promptWithComponent";
-import FormPromptComponent from "./Subcomponents/FormPromptComponent";
+import NewNamePrompt from "./Subcomponents/NewNameComponent";
+import ConfirmPrompt from "./Utilities/confirmPromptComponent";
+import { useNavigate } from "react-router-dom";
 
-export default function Inventory() {
+function InventoryEntry() {
   const lang = useContext(Contexts.langContext);
 
-  const [items, setItems] = useState(null);
-  const [providers, setProvidsers] = useState([]);
+  const navigate = useNavigate();
+
+  const [entries, setEntries] = useState([]);
+  const [search, setSearch] = useState("");
 
   const fetchData = useCallback(async () => {
-    const providersResponse = await Api.get("/providers");
-    setProvidsers(providersResponse.data);
+    const entriesResponse = await Api.get("/inventory/entries");
+    setEntries(entriesResponse.data);
   }, []);
-
-  const addItem = async () => {
-    const newLine = await promptWithComponent((resolve) => (
-      <FormPromptComponent
-        resolve={resolve}
-        lang={lang}
-        title={lang.inventory.general.addProduct}
-        type="select"
-        fields={[
-          {
-            nameProp: "product",
-            placeholder: lang.inventory.placeholder.product,
-            type: "selector",
-            selectorData: [
-              ["NameCodes"],
-              lang.inventory.placeholder.product,
-              lang.general.cancel,
-              lang.general.searchInput,
-              lang.general.noItems,
-            ],
-            getData: async () => {
-              return await Api.get("/products").then((x) =>
-                x.data.map((x) => ({
-                  ...x,
-                  NameCodes:
-                    `${x.Code} - ${x.Name}` + (x.BarCode ? ` - ${x.BarCode}` : ""),
-                }))
-              );
-            },
-            values: providers.map((x) => ({ item: x.id, label: x.Name })),
-          },
-          {
-            nameProp: "provider",
-            label: lang.inventory.placeholder.provider,
-            type: "select",
-            values: providers.map((x) => ({
-              item: JSON.stringify(x),
-              label: x.Name,
-            })),
-          },
-          {
-            nameProp: "quantity",
-            label: lang.inventory.placeholder.quantityEntry,
-            type: "number",
-          },
-          {
-            nameProp: "images",
-            label: lang.inventory.placeholder.images,
-            type: "images",
-          },
-        ]}
-      />
-    ));
-
-    if(!newLine.quantity || !newLine.provider || !newLine.product)
-      toast.error(lang.products.create.validations.badParams)
-
-    if (newLine)
-      setItems(
-        items
-          ? [
-              ...items,
-              {
-                quantity: parseInt(newLine.quantity),
-                provider: JSON.parse(newLine.provider),
-                product: newLine.product,
-                images: newLine.product,
-              },
-            ]
-          : [
-              {
-                quantity: parseInt(newLine.quantity),
-                provider: JSON.parse(newLine.provider),
-                product: newLine.product,
-                images: newLine.product,
-              },
-            ]
-      );
-  };
 
   useEffect(() => {
     fetchData();
@@ -117,52 +38,122 @@ export default function Inventory() {
   return (
     <div className="flex flex-col gap-4">
       <Container className="bg-primary text-white">
-        <Heading level="h1">{lang.inventory.entry}</Heading>
+        <Heading level="h1">{lang.inventory.entries}</Heading>
       </Container>
-      <div className="flex justify-between w-full [&_>div]:min-w-[150px] [&_>div]:w-1/4">
-        <InputLabel
-          label={lang.products.create.labels.description}
-          className="w-full text"
+
+      <div className="flex justify-between mt-5">
+        <Button
+          onClick={() => navigate("/inventory/entries/new")}
+          variant="secondary"
         >
-          <Textarea placeholder={lang.inventory.placeholder.description} />
-        </InputLabel>
-      </div>
-      <div className="flex justify-between w-full mb-5 [&_>div]:min-w-[150px] [&_>div]:w-1/4">
-        <Button onClick={addItem} variant="secondary">
-          <DocumentText />
-          {lang.inventory.general.addProduct}
+          <Plus />
+          {lang.inventory.general.newEntry}
         </Button>
       </div>
-      {items ? (
+      <div className="justify-between mt-5 w-full [&_>div_input]:min-w-[150px]">
+        <Input
+          placeholder={lang.inventory.general.searchOutputEntry}
+          className="w-1/4"
+          maxLength={80}
+          type="search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      {entries && !entries?.error ? (
         <AdaptableTable
-          data={items.map((itm) => {
-            return {
-              id: itm.product.id,
-              Code: itm.product.Code,
-              Name: itm.product.Name,
-              Quantity: itm.quantity,
-              Provider: itm.provider.Name,
-            };
-          })}
+          data={entries
+            .filter(
+              (ent) =>
+                (ent.User &&
+                  ent.User.toLowerCase().includes(search.toLowerCase())) ||
+                ent.id == search
+            )
+            .map((ent) => {
+              return {
+                ...ent,
+                dropDown: (
+                  <EntryDropDown
+                    fetchData={fetchData}
+                    lang={lang}
+                    originId={ent.id}
+                  />
+                ),
+              };
+            })}
           columnModel={{
-            order: ["id", "Code", "Name", "Quantity", "Provider"],
+            order: ["id", "User", "Description", "Date"],
             dataModel: {
               id: lang.inventory.general.id,
-              Code: lang.inventory.labels.code,
-              Name: lang.inventory.labels.product,
-              Quantity: lang.inventory.labels.quantity,
-              Provider: lang.inventory.labels.provider,
+              User: lang.inventory.general.user,
+              Description: lang.inventory.labels.description,
+              Date: lang.inventory.general.date,
+              dropDown: "",
+            },
+            css: {
+              Description: "break-all",
             },
           }}
         />
       ) : (
-        <div className="border-t border-b py-4 mx-4">
-          <Heading level="h2" className="text-center text-sm">
-            Selecciona el primer producto
-          </Heading>
-        </div>
+        <></>
       )}
-      <Toaster/>
+
+      <Toaster />
     </div>
   );
 }
+
+function EntryDropDown({ originId, lang, fetchData }) {
+  const editOrigin = async () => {
+    const originName = await promptWithComponent((resolve) => (
+      <NewNamePrompt resolve={resolve} lang={lang} title={lang.origins.edit} />
+    ));
+
+    if (originName && originName.trim() !== "") {
+      await Api.patch("/origins/" + originId, { Name: originName });
+      await fetchData();
+      toast.success(lang.origins.create.validations.editted);
+    } else {
+      if (originName !== null) {
+        toast.error(lang.origins.create.validations.badParams);
+      }
+    }
+  };
+
+  const deleteOrigin = async () => {
+    const confirmed = await promptWithComponent((resolve) => (
+      <ConfirmPrompt resolve={resolve} lang={lang} />
+    ));
+
+    if (confirmed) {
+      await Api.delete("/origins/" + originId);
+      await fetchData();
+      toast.success(lang.general.deletedSuccess);
+    }
+  };
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <IconButton>
+            <EllipsisHorizontal />
+          </IconButton>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item onClick={editOrigin} className="gap-x-2">
+            <PencilSquare className="text-ui-fg-subtle" />
+            {lang.general.edit}
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item onClick={deleteOrigin} className="gap-x-2">
+            <Trash className="text-ui-fg-subtle" />
+            {lang.general.delete}
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </>
+  );
+}
+
+export default InventoryEntry;

@@ -2,7 +2,16 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import AdaptableTable from "./Subcomponents/AdaptableTable";
 import Api from "../Sources/Api";
-import { Button, Container, DropdownMenu, Heading, IconButton, toast, Toaster, Input } from "@medusajs/ui";
+import {
+  Button,
+  Container,
+  DropdownMenu,
+  Heading,
+  IconButton,
+  toast,
+  Toaster,
+  Input,
+} from "@medusajs/ui";
 import { EllipsisHorizontal, PencilSquare, Plus, Trash } from "@medusajs/icons";
 import promptWithComponent from "./Utilities/promptWithComponent";
 import NewNamePrompt from "./Subcomponents/NewNameComponent";
@@ -26,7 +35,6 @@ function Locations() {
   const createNewLocation = async () => {
     const locationName = await promptWithComponent((resolve) => (
       <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.new} />
-
     ));
 
     if (locationName && locationName.trim() !== "") {
@@ -52,29 +60,34 @@ function Locations() {
           {lang.locations.new}
         </Button>
       </div>
+
       <div className="justify-between mt-5 w-full [&_>div_input]:min-w-[150px]">
-          <Input
-            placeholder={lang.general.search}
-            className="w-1/4"
-            type="search"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+        <Input
+          placeholder={lang.general.search}
+          className="w-1/4"
+          type="search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       {locations && !locations?.error ? (
         <AdaptableTable
-          data={locations.filter(itm => itm.Name.toLowerCase().includes(search.toLowerCase())).map((org) => {
-            return {
-              id: org.id,
-              Name: org.Name,
-              dropDown: (
-                <LocationDropDown
-                  fetchData={fetchData}
-                  lang={lang}
-                  originId={org.id}
-                />
-              ),
-            };
-          })}
+          data={locations
+            .filter((itm) =>
+              itm.Name.toLowerCase().includes(search.toLowerCase())
+            )
+            .map((org) => {
+              return {
+                id: org.id,
+                Name: org.Name,
+                dropDown: (
+                  <LocationDropDown
+                    fetchData={fetchData}
+                    lang={lang}
+                    originId={org.id}
+                  />
+                ),
+              };
+            })}
           columnModel={{
             order: ["id", "Name", "dropDown"],
             dataModel: {
@@ -85,7 +98,7 @@ function Locations() {
             css: {
               Name: "w-full",
               id: "w-1/4",
-            }
+            },
           }}
         />
       ) : (
@@ -100,7 +113,11 @@ function Locations() {
 function LocationDropDown({ originId: locationId, lang, fetchData }) {
   const editOrigin = async () => {
     const originName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.locations.edit} />
+      <NewNamePrompt
+        resolve={resolve}
+        lang={lang}
+        title={lang.locations.edit}
+      />
     ));
 
     if (originName && originName.trim() !== "") {
@@ -119,7 +136,7 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
       <ConfirmPrompt resolve={resolve} lang={lang} />
     ));
 
-    if(confirmed) {
+    if (confirmed) {
       await Api.delete("/locations/" + locationId);
       await fetchData();
       toast.success(lang.general.deletedSuccess);
@@ -135,10 +152,7 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item
-            onClick={editOrigin}
-            className="gap-x-2"
-          >
+          <DropdownMenu.Item onClick={editOrigin} className="gap-x-2">
             <PencilSquare className="text-ui-fg-subtle" />
             {lang.general.edit}
           </DropdownMenu.Item>

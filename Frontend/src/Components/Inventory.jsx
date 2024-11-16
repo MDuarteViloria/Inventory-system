@@ -26,11 +26,11 @@ export default function Inventory() {
   const headButtons = [
     {
       title: lang.inventory.entry,
-      onClick: () => navigate("/inventory/entry"),
+      onClick: () => navigate("/inventory/entries"),
     },
     {
       title: lang.inventory.output,
-      onClick: () => navigate("/inventory/output"),
+      onClick: () => navigate("/inventory/outputs"),
     },
   ];
 

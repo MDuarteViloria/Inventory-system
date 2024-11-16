@@ -18,6 +18,7 @@ export default {
     export: "Exportar",
     import: "Importar",
     cancel: "Cancelar",
+    exit: "Salir",
     search: "Buscar...",
     save: "Guardar",
     add: "Añadir",
@@ -31,6 +32,7 @@ export default {
     imSure: "Estoy seguro",
     pleaseConfirm: "Por favor confirme",
     deletedSuccess: "Eliminado correctamente",
+    images: "Imagenes"
   },
   origins: {
     selfName: "Origen",
@@ -70,13 +72,23 @@ export default {
       id: "ID",
       name: "Nombre",
       quantity: "Cantidad",
+      user: "Usuario",
       status: "Estado",
+      searchOutputEntry: "Buscar por ID o Usuario...",
+      newEntry: "Nueva Entrada de Inventario",
       addProduct: "Añadir Producto",
+      date: "Fecha",
+      seeImages : "Ver Imagenes",
+    },
+    edit: {
+      editted: "Editado con exito",
+      badParams: "Todos los campos son obligatorios"
     },
     placeholder: {
       quantityEntry: "Ingrese una cantidad para ingresar",
       provider: "Seleccione un proveedor",
       product: "Seleccione un producto",
+      details: "Escriba un detalle sobre este ingreso",
       images: "Seleccione las imagenes",
       description: "Escriba una descripción",
     },
@@ -84,11 +96,18 @@ export default {
       product: "Producto",
       code: "Codigo",
       quantity: "Cantidad",
+      details: "Detalle",
       provider: "Proveedor",
       description: "Descripción",
     },
+    entryCreate: {
+      success: "La entrada se ha creado correctamente",
+      error: "Error al crear la entrada",
+    },
     entry: "Entrada de Inventario",
+    entries: "Entradas de Inventario",
     output: "Salida de Inventario",
+    outputs: "Salidas de Inventario",
     stock: {
       true: "Disponible",
       false: "No disponible",
