@@ -7,6 +7,10 @@ export default function Nav() {
 
   const routes = [
     {
+      name: "back",
+      icon:<box-icon color="white" name='arrow-back'></box-icon>,
+    },
+    {
       name: "home",
       path: "/",
       icon: <box-icon type="solid" color="white" name="home"></box-icon>,
@@ -59,7 +63,6 @@ export default function Nav() {
         className={
           "w-20 h-10 z-10 shadow-lg justify-center items-center sticky top-4 left-8 md:hidden transition-[background] rounded-full bg-primary flex"
         }
-        onClick={() => setHidden(false)}
       >
         <box-icon name="menu" size="sm" color="white"></box-icon>
       </button>
@@ -81,13 +84,14 @@ export default function Nav() {
           <Link
             onClick={() => {
               setHidden(true);
+              if(!route.path) window.history.back();
             }}
             className={
               "w-full h-10 rounded-lg flex bg-secondary/50 transition-all hover:bg-secondary justify-start px-8 items-center gap-3 " +
               route.css
             }
             key={index}
-            to={route.path}
+            to={route.path ?? ".."}
           >
             {route.icon}
             {translations.navPaths[route.name]}

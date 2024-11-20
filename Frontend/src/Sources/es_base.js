@@ -1,5 +1,6 @@
 export default {
   navPaths: {
+    back: "Volver",
     home: "Inicio",
     products: "Productos",
     inventory: "Inventario",
@@ -17,6 +18,7 @@ export default {
   general: {
     export: "Exportar",
     import: "Importar",
+    noImages: "No hay imagenes",
     cancel: "Cancelar",
     exit: "Salir",
     search: "Buscar...",
@@ -27,6 +29,7 @@ export default {
     noItems: "No hay elementos",
     delete: "Eliminar",
     edit: "Editar",
+    error: "Ha ocurrido un error",
     see: "Ver",
     sure: "¿Estas seguro?",
     imSure: "Estoy seguro",
@@ -69,6 +72,7 @@ export default {
   },
   inventory: {
     general: {
+      seeEntry: "Visualizacion Entrada de Inventario",
       id: "ID",
       name: "Nombre",
       quantity: "Cantidad",

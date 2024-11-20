@@ -29,7 +29,7 @@ function SeeImages({ data, resolve, lang }) {
             <Drawer.Title>{lang.general.images}</Drawer.Title>
           </Drawer.Header>
           <Drawer.Body className="flex-grow overflow-y-auto flex flex-col w-full">
-            {(data?.length ?? 0) > 0 && (
+            {(data?.length ?? 0) > 0 ? (
                 <div className="w-full grid grid-cols-2 gap-2">
                   {data?.map((image, index) => (
                     <img
@@ -40,6 +40,10 @@ function SeeImages({ data, resolve, lang }) {
                     />
                   ))}
                 </div>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <h1 className="text-lg font-semibold">{lang.general.noImages}</h1>
+              </div>
             )}
           </Drawer.Body>
           <Drawer.Footer>

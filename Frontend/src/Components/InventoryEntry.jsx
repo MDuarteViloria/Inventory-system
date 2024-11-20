@@ -8,14 +8,10 @@ import {
   DropdownMenu,
   Heading,
   IconButton,
-  toast,
   Toaster,
   Input,
 } from "@medusajs/ui";
-import { EllipsisHorizontal, PencilSquare, Plus, Trash } from "@medusajs/icons";
-import promptWithComponent from "./Utilities/promptWithComponent";
-import NewNamePrompt from "./Subcomponents/NewNameComponent";
-import ConfirmPrompt from "./Utilities/confirmPromptComponent";
+import { EllipsisHorizontal, Eye, PencilSquare, Plus, Trash } from "@medusajs/icons";
 import { useNavigate } from "react-router-dom";
 
 function InventoryEntry() {
@@ -73,15 +69,14 @@ function InventoryEntry() {
                 ...ent,
                 dropDown: (
                   <EntryDropDown
-                    fetchData={fetchData}
                     lang={lang}
-                    originId={ent.id}
+                    entryId={ent.id}
                   />
                 ),
               };
             })}
           columnModel={{
-            order: ["id", "User", "Description", "Date"],
+            order: ["id", "User", "Description", "Date", "dropDown"],
             dataModel: {
               id: lang.inventory.general.id,
               User: lang.inventory.general.user,
@@ -89,8 +84,9 @@ function InventoryEntry() {
               Date: lang.inventory.general.date,
               dropDown: "",
             },
-            css: {
+            cssRow: {
               Description: "break-all",
+              dropDown: "flex items-center justify-center"
             },
           }}
         />
@@ -103,34 +99,12 @@ function InventoryEntry() {
   );
 }
 
-function EntryDropDown({ originId, lang, fetchData }) {
-  const editOrigin = async () => {
-    const originName = await promptWithComponent((resolve) => (
-      <NewNamePrompt resolve={resolve} lang={lang} title={lang.origins.edit} />
-    ));
+function EntryDropDown({ entryId, lang }) {
+const navigate = useNavigate();
 
-    if (originName && originName.trim() !== "") {
-      await Api.patch("/origins/" + originId, { Name: originName });
-      await fetchData();
-      toast.success(lang.origins.create.validations.editted);
-    } else {
-      if (originName !== null) {
-        toast.error(lang.origins.create.validations.badParams);
-      }
-    }
-  };
-
-  const deleteOrigin = async () => {
-    const confirmed = await promptWithComponent((resolve) => (
-      <ConfirmPrompt resolve={resolve} lang={lang} />
-    ));
-
-    if (confirmed) {
-      await Api.delete("/origins/" + originId);
-      await fetchData();
-      toast.success(lang.general.deletedSuccess);
-    }
-  };
+  const seeEntry = () => {
+    navigate("/inventory/entries/" + entryId)
+  }
 
   return (
     <>
@@ -141,14 +115,9 @@ function EntryDropDown({ originId, lang, fetchData }) {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item onClick={editOrigin} className="gap-x-2">
-            <PencilSquare className="text-ui-fg-subtle" />
-            {lang.general.edit}
-          </DropdownMenu.Item>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Item onClick={deleteOrigin} className="gap-x-2">
-            <Trash className="text-ui-fg-subtle" />
-            {lang.general.delete}
+          <DropdownMenu.Item onClick={seeEntry} className="gap-x-2">
+            <Eye className="text-ui-fg-subtle" />
+            {lang.general.see}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>

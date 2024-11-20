@@ -14,14 +14,15 @@ import Providers from "./Components/Providers.jsx";
 import Inventory from "./Components/Inventory.jsx";
 import InventoryEntry from "./Components/InventoryEntry.jsx";
 import InventoryEntryNew from "./Components/InventoryEntryNew.jsx";
+import SeeEntry from "./Components/SeeEntry.jsx";
 
 function App() {
-  const [lang, setLang] = useState(es_base);
+  const [lang, setLang] = useState("es");
 
   return (
     <>
     <div className="light">
-      <contexts.langContext.Provider value={{...lang}}>
+      <contexts.langContext.Provider value={{...({es: es_base}[lang]), setLang}}>
         <BrowserRouter>
           <PrincipalLayout>
             <Routes>
@@ -35,6 +36,7 @@ function App() {
               <Route path="/providers" element={<Providers />} />
               <Route path="/inventory" element={<Inventory />} />
               <Route path="/inventory/entries" element={<InventoryEntry />} />
+              <Route path="/inventory/entries/:id" element={<SeeEntry />} />
               <Route path="/inventory/entries/new" element={<InventoryEntryNew />} />
             </Routes>
           </PrincipalLayout>

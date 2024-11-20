@@ -4,14 +4,15 @@ import Contexts from "../../Sources/Contexts";
 
 function AdaptableTable({
   data = [],
+  pagination = true,
   step = 10,
   columnModel = {
     order: ["Name", "id"],
     css: {
-      Name: "w-full"
+      Name: "w-full",
     },
     cssRow: {
-      Name: "text-left"
+      Name: "text-left",
     },
     dataModel: {
       Name: "Nombre",
@@ -19,7 +20,6 @@ function AdaptableTable({
     },
   },
 }) {
-
   const lang = useContext(Contexts.langContext);
 
   // PAGINATION LOGIC
@@ -50,33 +50,50 @@ function AdaptableTable({
           <Table.Header>
             <Table.Row>
               {columnModel.order.map((column, i) => (
-                <Table.HeaderCell className={columnModel.css && columnModel.css[column]} key={i}>
+                <Table.HeaderCell
+                  className={columnModel.css && columnModel.css[column]}
+                  key={i}
+                >
                   {columnModel.dataModel[column]}
                 </Table.HeaderCell>
               ))}
-              
             </Table.Row>
           </Table.Header>
-          {data.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((row, i) => (
-            <Table.Row key={i}>
-              {columnModel.order.map((column, j) => (
-                <Table.Cell className={columnModel.cssRow && columnModel.cssRow[column]} key={j}>{row[column]}</Table.Cell>
-              ))}
-            </Table.Row>
-          ))}
+          {data
+            .slice(
+              ...(pagination
+                ? ([currentPage * pageSize, (currentPage + 1) * pageSize])
+                : [0])
+            )
+            .map((row, i) => (
+              <Table.Row key={i}>
+                {columnModel.order.map((column, j) => (
+                  <Table.Cell
+                    className={columnModel.cssRow && columnModel.cssRow[column]}
+                    key={j}
+                  >
+                    {row[column]}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
         </Table>
-        <Table.Pagination
-        className="flex flex-wrap"
-        count={data.length}
-        pageSize={pageSize}
-        pageIndex={currentPage}
-        pageCount={Number.parseInt(data.length / pageSize)}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-        translations={lang.tables}
-      />
+        {pagination ? (
+          <Table.Pagination
+            className="flex flex-wrap"
+            count={data.length}
+            pageSize={pageSize}
+            pageIndex={currentPage}
+            pageCount={Number.parseInt(data.length / pageSize)}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            previousPage={previousPage}
+            nextPage={nextPage}
+            translations={lang.tables}
+          />
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
