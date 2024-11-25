@@ -55,7 +55,7 @@ export default function Nav() {
     },
   ];
 
-  const translations = useContext(Contexts.langContext);
+  const { lang: translations } = useContext(Contexts.langContext);
 
   return (
     <>

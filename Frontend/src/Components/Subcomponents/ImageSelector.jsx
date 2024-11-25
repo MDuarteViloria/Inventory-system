@@ -7,7 +7,7 @@ import api from "../../Sources/Api";
 import selectImages from "../Utilities/selectImage";
 
 export default function ImageSelector({onSelected, label, count=null}) {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const getData = async () => {
     return await api.get("/images").then((data) => data.data);

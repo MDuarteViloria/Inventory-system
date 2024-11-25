@@ -63,7 +63,7 @@
 <default>NULL</default><relation table="Locations" row="id" />
 </row>
 <row name="Deleted" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<datatype>bit</datatype>
 <default>NULL</default></row>
 <row name="ModifyDate" null="1" autoincrement="0">
 <datatype>DATETIME</datatype>
@@ -90,7 +90,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1352" y="1598" name="OriginProducts">
+<table x="1277" y="1600" name="OriginProducts">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -112,7 +112,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1383" y="1687" name="Locations">
+<table x="1355" y="1707" name="Locations">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -139,7 +139,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="1959" y="1581" name="EntriesHeaders">
+<table x="1955" y="1586" name="EntriesHeaders">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -306,6 +306,62 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="Images" row="id" />
 </row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="2156.22216796875" y="1622.22216796875" name="Users">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="FullName" null="1" autoincrement="0">
+<datatype>VARCHAR(200)</datatype>
+<default>NULL</default></row>
+<row name="Username" null="1" autoincrement="0">
+<datatype>VARCHAR(200)</datatype>
+<default>NULL</default></row>
+<row name="Password" null="1" autoincrement="0">
+<datatype>VARCHAR(512)</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="2132.22216796875" y="1773.888916015625" name="Permissions">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="UniqueName" null="1" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>NULL</default></row>
+<row name="Description" null="1" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="2325.22216796875" y="1677.888916015625" name="UserPermissions">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="IdUser" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Users" row="id" />
+</row>
+<row name="IdPermission" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="Permissions" row="id" />
+</row>
+<row name="ToDelete" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>NULL</default></row>
+<row name="ToUpdate" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>NULL</default></row>
+<row name="ToGet" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>

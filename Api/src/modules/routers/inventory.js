@@ -225,7 +225,7 @@ router.get("/entries/:id", async (req, res) => {
 });
 
 router.post("/entries", async (req, res) => {
-  const { Lines, Description, User } = req.body;
+  const { Lines, Description } = req.body;
 
   if (!Lines || (!Description && Description !== "") || !User) {
     return res
@@ -278,7 +278,7 @@ router.post("/entries", async (req, res) => {
       }
     }
 
-    await database.query(headerSql, [User, Description]).then((result) => {
+    await database.query(headerSql, [req.locals.user.FullName, Description]).then((result) => {
       headerId = result.rows[0].id;
     });
 

@@ -5,6 +5,7 @@ import { Container, Heading, Button, Input } from "@medusajs/ui";
 import { Plus, CloudArrowDown, CloudArrowUp } from "@medusajs/icons";
 import { useNavigate } from "react-router-dom";
 import ProductsTable from "./Subcomponents/ProductsTable";
+import generateSheet from "./Utilities/generateSheet";
 
 export default function Products() {
   const [data, setData] = useState([]);
@@ -13,12 +14,23 @@ export default function Products() {
   const navigate = useNavigate();
 
   // LANG DATA
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const fetchData = useCallback(async () => {
     const productResponse = await api.get("/products");
     setData(productResponse.data);
   });
+
+  const exportSheet = () => {
+    const flatData = data.map((x) => ({
+      ...x,
+      Images: x.Images.map((y) => y.Url).join("\n"),
+      Categories: x.Categories.map((y) => y.Name).join("\n"),
+      OriginProduct: x.OriginProduct.Name,
+      Location: x.Location?.Name ?? "-",
+    }));
+    generateSheet(flatData, new Date().getTime() + "_products");
+  };
 
   // FETCH DATA
   useEffect(() => {
@@ -37,7 +49,7 @@ export default function Products() {
             {lang.products.new}
           </Button>
           <span className="flex gap-4">
-            <Button variant="secondary">
+            <Button onClick={exportSheet} variant="secondary">
               <CloudArrowDown />
               {lang.general.export}
             </Button>

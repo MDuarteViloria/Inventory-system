@@ -91,8 +91,8 @@ router.get("/:id", async (req, res) => {
             .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
               product.id,
             ])
-            .then((origin) =>
-              origin?.rows.map((image) => ({
+            .then((im) =>
+              im?.rows.map((image) => ({
                 Url: config.backendUrl + "/images/" + image.ImageId,
                 id: image.ImageId,
               }))
@@ -299,19 +299,19 @@ router.post("/", async (req, res) => {
   }
 
   const sql =
-    "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId, ModifyDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, DATE()(), FALSE)";
+    "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId, ModifyDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, DATE(), FALSE) RETURNING id";
 
   const sqlStock =
-    "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, (SELECT id FROM Products WHERE Code = ?))";
+    "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, ?)";
 
   const sqlImage =
-    "INSERT INTO ProductImages (IdProduct, IdImage) VALUES ((SELECT id FROM Products WHERE Code = ?), ?)";
+    "INSERT INTO ProductImages (ProductId, ImageId) VALUES (?, ?)";
 
   const sqlCategories =
-    "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES ((SELECT id FROM Products WHERE Code = ?), ?)";
+    "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
 
   try {
-    await database.query(sql, [
+    const {rows: insProductRes} = await database.query(sql, [
       Name,
       Description,
       Code,
@@ -320,10 +320,12 @@ router.post("/", async (req, res) => {
       LocationId,
     ]);
 
+    const idProduct = insProductRes[0].id;
+
     if ((Images ?? []).length > 0) {
       await Promise.all(
         Images.map(async (image) => {
-          await database.query(sqlImage, [Code, image]);
+          await database.query(sqlImage, [idProduct, image]);
         })
       );
     }
@@ -331,12 +333,12 @@ router.post("/", async (req, res) => {
     if ((Categories ?? []).length > 0) {
       await Promise.all(
         Categories.map(async (category) => {
-          await database.query(sqlCategories, [Code, category]);
+          await database.query(sqlCategories, [idProduct, category]);
         })
       );
     }
 
-    await database.query(sqlStock, [0, Code]);
+    await database.query(sqlStock, [0, idProduct]);
 
     res.json({
       success: true,

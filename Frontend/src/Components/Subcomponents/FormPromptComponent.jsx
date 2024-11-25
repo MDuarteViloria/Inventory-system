@@ -57,7 +57,7 @@ export default function FormPromptComponent({
           />
         ),
         images: (
-          <Contexts.langContext.Provider value={lang}>
+          <Contexts.langContext.Provider value={{ lang }}>
             <ImageSelector
               receivedLang={lang}
               count={dataFields[field.nameProp]?.length}

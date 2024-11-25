@@ -21,7 +21,7 @@ import Api from "../Sources/Api";
 export default function ProductNew() {
   const [product, setProduct] = useState({});
 
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
   const timeoutRef = useRef(null);
   const timeoutBarcodeRef = useRef(null);
   const [validCode, setValidCode] = useState(false);
@@ -112,7 +112,7 @@ export default function ProductNew() {
       Name: product.title,
       Description: product.description ?? "",
       Code: product.code,
-      BarCode: product.barCode,
+      BarCode: product.barcode,
       OriginProductId: product?.origin?.id,
       LocationId: product?.location?.id,
       Images: product.images?.map((image) => image.id),
@@ -280,24 +280,25 @@ export default function ProductNew() {
         <p className="text-sm font-medium ml-2 pb-0.5">{lang.general.images}</p>
         <Container className="flex flex-col gap-4 mb-8">
           <ImageSelector
-            onSelected={(val) => changeProperty("image", val)}
+            onSelected={(val) => changeProperty("images", val)}
             label={lang.products.create.labels.image}
           />
           <div className="w-full grid lg:grid-cols-4 grid-cols-2 gap-5">
-            {product.image &&
-              product.image.map((img) => (
+            {product.images &&
+              product.images.map((img) => (
                 <img
                   src={img.url}
                   className="object-cover aspect-square w-full rounded-lg shadow-buttons-neutral"
                 />
               ))}
-            {(product.image?.length ?? 0) === 0 && (
+            {(product.images?.length ?? 0) === 0 && (
               <Text>{lang.general.noItems}</Text>
             )}
           </div>
         </Container>
         <Button
           onClick={saveProduct}
+          disabled={!validCode || (!validBarcode && validBarcode === "")}
           variant="secondary"
           className="w-full md:w-1/4 mr-0 ml-auto"
         >

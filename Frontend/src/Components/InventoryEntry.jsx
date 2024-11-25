@@ -15,7 +15,7 @@ import { EllipsisHorizontal, Eye, PencilSquare, Plus, Trash } from "@medusajs/ic
 import { useNavigate } from "react-router-dom";
 
 function InventoryEntry() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const navigate = useNavigate();
 

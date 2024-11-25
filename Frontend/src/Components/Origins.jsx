@@ -9,7 +9,7 @@ import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 
 function Origins() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const [origins, setOrigins] = useState([]);
   const [search, setSearch] = useState("");

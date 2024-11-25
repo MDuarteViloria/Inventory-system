@@ -4,7 +4,7 @@ import Contexts from "../../Sources/Contexts";
 
 export function MultiSelect({ data, onSelected, selecteds, children }) {
   const [open, setOpen] = useState(false);
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   return (
     <>

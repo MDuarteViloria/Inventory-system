@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { fileURLToPath } from "url";
 import sqlite3 from "sqlite3";
+import permissionsList from "../../sources/permissionsList.js";
 const sqlite = sqlite3.verbose();
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -22,5 +23,9 @@ export async function createDB() {
     );
 
     await new Promise((resolve) => newDB.exec(SQL, resolve));
+
+    await Promise.all(permissionsList.map(async (permission) => {
+      await new Promise((resolve) => newDB.exec(`INSERT INTO Permissions (UniqueName) VALUES ('${permission}')`, resolve));
+    }))
   }
 }

@@ -1,3 +1,5 @@
+import { Button } from "@medusajs/ui";
+
 export default {
   navPaths: {
     back: "Volver",
@@ -133,6 +135,17 @@ export default {
       }
     }
   },
+  login: {
+    title: "Iniciar Sesión",
+    button: "Iniciar Sesión",
+    badLogin: "El usuario o la contraseña son incorrectos",
+    error: "Error al iniciar sesión",
+    labels: {
+      username: "Usuario",
+      password: "Contraseña",
+
+    }
+  },
   locations: {
     selfName: "Ubicación",
     new: "Nueva ubicación",
@@ -194,7 +207,7 @@ export default {
         location: "Seleccione la ubicación del producto",
         code: "Escriba el Código del producto",
         images: "Seleccione las imagenes",
-        barcode: "Escriba el código de barras del producto (Opcional)",
+        barcode: "Escriba el código de barras del producto",
       },
       general: "Información General",
     },

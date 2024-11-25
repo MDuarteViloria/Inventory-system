@@ -18,7 +18,7 @@ import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 
 function Locations() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const [locations, setLocations] = useState([]);
   const [search, setSearch] = useState("");

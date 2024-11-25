@@ -8,7 +8,7 @@ import { ProductDropdown } from "./Subcomponents/ProductsTable";
 import { DocumentText, Plus } from "@medusajs/icons";
 
 export default function Inventory() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
   const navigate = useNavigate();
 
   const [stocks, setStocks] = useState(null);

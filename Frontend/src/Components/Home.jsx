@@ -8,7 +8,7 @@ import Contexts from "../Sources/Contexts";
 export default function Home() {
   const [data, setData] = useState(null);
 
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   useEffect(() => {
     const fetchData = async () => {

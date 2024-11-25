@@ -9,7 +9,7 @@ import NewNamePrompt from "./Subcomponents/NewNameComponent";
 import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 
 function Categories() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");

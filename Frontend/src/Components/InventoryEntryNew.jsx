@@ -27,7 +27,7 @@ import seeImages from "./Utilities/seeImages";
 import { useNavigate } from "react-router-dom"
 
 export default function InventoryEntryNew() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const navigate = useNavigate();
   
@@ -163,8 +163,7 @@ export default function InventoryEntryNew() {
           Images: itm.images.map((x) => x.id),
           Quantity: itm.quantity,
         };
-      }),
-      User: "Admin",
+      })
     });
 
     if(response.status === 200) {

@@ -1,0 +1,12 @@
+export default [
+  "SUPERADMIN",
+  "PRODUCTOS",
+  "IMAGENES",
+  "CATEGORIAS",
+  "UBICACIONES",
+  "ORIGENES",
+  "PROVEEDORES",
+  "MOVIMIENTOS",
+  "INVENTARIO",
+  "USUARIOS",
+]

@@ -21,7 +21,7 @@ import Api from "../Sources/Api";
 export default function ProductEdit() {
   const [product, setProduct] = useState(null);
 
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
   const timeoutRef = useRef(null);
   const timeoutBarcodeRef = useRef(null);
   const [validCode, setValidCode] = useState(true);

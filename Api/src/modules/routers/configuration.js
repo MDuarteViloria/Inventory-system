@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/translations", (req, res) => {
-  const translations = JSON.parse(
+  const { lang: translations } = JSON.parse(
     fs.readFileSync("./src/sources/translations/register.json", "utf8")
   );
 
@@ -47,7 +47,7 @@ router.get("/translations", (req, res) => {
 });
 
 router.get("/translations/:lang", (req, res) => {
-  const translations = JSON.parse(
+  const { lang: translations } = JSON.parse(
     fs.readFileSync("./src/sources/translations/register.json", "utf8")
   );
   const fileLocation = translations.find(

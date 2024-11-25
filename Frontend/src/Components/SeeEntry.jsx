@@ -5,7 +5,6 @@ import {
   Heading,
   IconButton,
   Text,
-  toast,
   Toaster,
 } from "@medusajs/ui";
 import { useCallback, useContext, useEffect, useState } from "react";
@@ -16,19 +15,14 @@ import {
   DocumentText,
   EllipsisHorizontal,
   Eye,
-  PencilSquare,
-  Trash,
 } from "@medusajs/icons";
 import InputLabel from "./Subcomponents/Label";
-import promptWithComponent from "./Utilities/promptWithComponent";
-import FormPromptComponent from "./Subcomponents/FormPromptComponent";
-import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 import seeImages from "./Utilities/seeImages";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import generateTablePdf from "./Utilities/generateTablePdf";
 
 export default function SeeEntry() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const [entry, setEntry] = useState(null);
 
@@ -42,17 +36,17 @@ export default function SeeEntry() {
   const exportData = useCallback(async () => {
     generateTablePdf(
       [
-        { prop: "id", label: "ID" },
-        { prop: "Code", label: "Codigo" },
-        { prop: "Name", label: "Nombre" },
-        { prop: "Details", label: "Detalle" },
-        { prop: "Quantity", label: "Cantidad" },
-        { prop: "Provider", label: "Proveedor" },
+        { prop: "id", label: lang.inventory.general.id },
+        { prop: "Code", label: lang.products.headers.code },
+        { prop: "Name", label: lang.products.headers.name },
+        { prop: "Details", label: lang.inventory.labels.details },
+        { prop: "Quantity", label: lang.inventory.labels.quantity },
+        { prop: "Provider", label: lang.inventory.labels.provider },
       ],
       entry.Lines.map((x) => ({
         ...x,
         id: x.Product.id,
-        Provider: x.Provider.Name,
+        Provider: x.Provider.Doc + " - " + x.Provider.Name,
         Code: x.Product.Code,
         Name: x.Product.Name,
       })),
@@ -61,15 +55,15 @@ export default function SeeEntry() {
         title: "Entrada de Inventario",
         paramValues: [
           {
-            label: "ID",
+            label: lang.inventory.general.id,
             value: entryId,
           },
           {
-            label: "Usuario",
+            label: lang.inventory.general.user,
             value: entry.User,
           },
           {
-            label: "Fecha",
+            label: lang.inventory.general.date,
             value: entry.Date,
           }
         ],

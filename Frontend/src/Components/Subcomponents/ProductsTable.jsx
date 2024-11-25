@@ -9,7 +9,7 @@ import ConfirmPrompt from "../Utilities/confirmPromptComponent";
 import Api from "../../Sources/Api";
 
 export default function ProductsTable({ data, fetchData }) {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   // PAGINATION LOGIC
   const [currentPage, setCurrentPage] = useState(0);
@@ -88,7 +88,7 @@ export default function ProductsTable({ data, fetchData }) {
 }
 
 export function ProductDropdown({ product, fetchData }) {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
   const navigate = useNavigate();
 
   const deleteProduct = async () => {

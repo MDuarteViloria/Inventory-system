@@ -20,7 +20,7 @@ function AdaptableTable({
     },
   },
 }) {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   // PAGINATION LOGIC
   const [currentPage, setCurrentPage] = useState(0);

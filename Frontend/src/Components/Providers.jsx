@@ -18,7 +18,7 @@ import ConfirmPrompt from "./Utilities/confirmPromptComponent";
 import FormPromptComponent from "./Subcomponents/FormPromptComponent";
 
 function Providers() {
-  const lang = useContext(Contexts.langContext);
+  const { lang } = useContext(Contexts.langContext);
 
   const [providers, setProviders] = useState([]);
   const [search, setSearch] = useState("");
