@@ -1,6 +1,5 @@
-import { Button } from "@medusajs/ui";
-
 export default {
+  short: "es",
   navPaths: {
     back: "Volver",
     home: "Inicio",
@@ -11,6 +10,8 @@ export default {
     locations: "Ubicaciones",
     categories: "Categorías",
     origins: "Origenes",
+    images: "Imagenes",
+    users: "Usuarios",
   },
   dashboard: {
     products: "Productos",
@@ -37,7 +38,7 @@ export default {
     imSure: "Estoy seguro",
     pleaseConfirm: "Por favor confirme",
     deletedSuccess: "Eliminado correctamente",
-    images: "Imagenes"
+    images: "Imagenes",
   },
   origins: {
     selfName: "Origen",
@@ -51,9 +52,9 @@ export default {
       success: "El origen se ha creado correctamente",
       validations: {
         badParams: "El nombre no es valido",
-        editted: "El origen se ha editado correctamente"
-      }
-    }
+        editted: "El origen se ha editado correctamente",
+      },
+    },
   },
   providers: {
     selfName: "Proveedor",
@@ -68,13 +69,14 @@ export default {
       success: "El proveedor se ha creado correctamente",
       validations: {
         badParams: "El nombre o el N. Documento no es valido",
-        editted: "El proveedor se ha editado correctamente"
-      }
-    }
+        editted: "El proveedor se ha editado correctamente",
+      },
+    },
   },
   inventory: {
     general: {
       seeEntry: "Visualizacion Entrada de Inventario",
+      seeOutput: "Visualizacion Salida de Inventario",
       id: "ID",
       name: "Nombre",
       quantity: "Cantidad",
@@ -82,16 +84,18 @@ export default {
       status: "Estado",
       searchOutputEntry: "Buscar por ID o Usuario...",
       newEntry: "Nueva Entrada de Inventario",
+      newOutput: "Nueva Salida de Inventario",
       addProduct: "Añadir Producto",
       date: "Fecha",
-      seeImages : "Ver Imagenes",
+      seeImages: "Ver Imagenes",
     },
     edit: {
       editted: "Editado con exito",
-      badParams: "Todos los campos son obligatorios"
+      badParams: "Todos los campos son obligatorios",
     },
     placeholder: {
       quantityEntry: "Ingrese una cantidad para ingresar",
+      quantityOutput: "Ingrese una cantidad de salida",
       provider: "Seleccione un proveedor",
       product: "Seleccione un producto",
       details: "Escriba un detalle sobre este ingreso",
@@ -105,10 +109,18 @@ export default {
       details: "Detalle",
       provider: "Proveedor",
       description: "Descripción",
+      output: "Salida de Inventario",
+      entry: "Entrada de Inventario",
     },
     entryCreate: {
       success: "La entrada se ha creado correctamente",
       error: "Error al crear la entrada",
+    },
+    outputCreate: {
+      success: "La salida se ha creado correctamente",
+      stock: "La cantidad solicitada no esta en stock",
+      quantity: "La cantidad solicitada debe ser mayor a 0",
+      error: "Error al crear la salida",
     },
     entry: "Entrada de Inventario",
     entries: "Entradas de Inventario",
@@ -117,7 +129,7 @@ export default {
     stock: {
       true: "Disponible",
       false: "No disponible",
-    }
+    },
   },
   categories: {
     selfName: "Categoría",
@@ -131,20 +143,19 @@ export default {
       success: "La categoría se ha creado correctamente",
       validations: {
         badParams: "El nombre no es valido",
-        editted: "La categoría se ha editado correctamente"
-      }
-    }
+        editted: "La categoría se ha editado correctamente",
+      },
+    },
   },
   login: {
     title: "Iniciar Sesión",
-    button: "Iniciar Sesión",
+    button: "Entrar",
     badLogin: "El usuario o la contraseña son incorrectos",
     error: "Error al iniciar sesión",
     labels: {
       username: "Usuario",
       password: "Contraseña",
-
-    }
+    },
   },
   locations: {
     selfName: "Ubicación",
@@ -158,9 +169,9 @@ export default {
       success: "La ubicacion se ha creado correctamente",
       validations: {
         badParams: "El nombre no es valido",
-        editted: "La ubicacion se ha editado correctamente"
-      }
-    }
+        editted: "La ubicacion se ha editado correctamente",
+      },
+    },
   },
   products: {
     search: "Buscar producto",
@@ -250,11 +261,48 @@ export default {
     createProductHeader: "Crear nuevo producto",
     editProductHeader: "Editar producto",
   },
+  settings: {
+    images: "Imagenes",
+    users: "Usuarios",
+    language: "Idioma",
+  },
+  images: {
+    new: "Añadir Imagen",
+    addedSuccess: "Imagen añadida correctamente",
+    sureDelete: "Se eliminará de todos los productos, salidas y entradas",
+  },
+  users: {
+    selfName: "Usuario",
+    new: "Nuevo usuario",
+    edit: "Editar usuario",
+    general: {
+      id: "ID",
+      fullname: "Nombre Completo",
+      username: "Usuario",
+      password: "Contraseña",
+    },
+    placeholders: {
+      fullname: "Nombre Completo",
+      username: "Usuario",
+      password: "Contraseña, Dejar vacio para mantener",
+      permissions: "Permisos",
+    },
+    permissions: {
+      edit: "Editar permisos",
+    },
+    create: {
+      success: "El usuario se ha creado correctamente",
+      validations: {
+        badParams: "El nombre o el usuario no es valido",
+        editted: "El usuario se ha editado correctamente",
+      },
+    },
+  },
   tables: {
-      of: "de",
-      results: "resultados",
-      pages: "paginas",
-      prev: "Anterior",
-      next: "Siguiente",
-  }
+    of: "de",
+    results: "resultados",
+    pages: "paginas",
+    prev: "Anterior",
+    next: "Siguiente",
+  },
 };

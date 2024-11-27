@@ -389,7 +389,7 @@ router.patch("/:id", async (req, res) => {
   }
 
   const sql =
-    "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId), ModifyDate = DATE()() WHERE id = ?";
+    "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId), ModifyDate = DATE() WHERE id = ?";
 
   const sqlImageInit = "DELETE FROM ProductImages WHERE ProductId = ?";
 

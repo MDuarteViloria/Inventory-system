@@ -1,14 +1,17 @@
-import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Contexts from "../../Sources/Contexts";
+import api from "../../Sources/Api";
 
 export default function Nav() {
   const [hidden, setHidden] = useState(true);
 
+  const navigate = useNavigate();
+
   const routes = [
     {
       name: "back",
-      icon:<box-icon color="white" name='arrow-back'></box-icon>,
+      icon: <box-icon color="white" name="arrow-back"></box-icon>,
     },
     {
       name: "home",
@@ -18,16 +21,19 @@ export default function Nav() {
     {
       name: "products",
       path: "/products",
+      permission: "PRODUCTOS",
       icon: <box-icon type="solid" color="white" name="box"></box-icon>,
     },
     {
       name: "inventory",
       path: "/inventory",
+      permission: "INVENTARIO",
       icon: <box-icon type="solid" color="white" name="package"></box-icon>,
     },
     {
       name: "categories",
       path: "/categories",
+      permission: "PRODUCTOS",
       icon: (
         <box-icon type="solid" color="white" name="category-alt"></box-icon>
       ),
@@ -35,16 +41,19 @@ export default function Nav() {
     {
       name: "origins",
       path: "/origins",
+      permission: "PRODUCTOS",
       icon: <box-icon type="solid" name="map-alt" color="white"></box-icon>,
     },
     {
       name: "locations",
       path: "/locations",
+      permission: "PRODUCTOS",
       icon: <box-icon color="white" name="cube-alt"></box-icon>,
     },
     {
       name: "providers",
       path: "/providers",
+      permission: "PROVEEDORES",
       icon: <box-icon type="solid" color="white" name="contact"></box-icon>,
     },
     {
@@ -55,11 +64,27 @@ export default function Nav() {
     },
   ];
 
-  const { lang: translations } = useContext(Contexts.langContext);
+  const {
+    lang: translations,
+    user: { user, permissions },
+    validatePermissions,
+  } = useContext(Contexts.langContext);
+
+  const logout = () => {
+    api.get("/auth/logout").then(() => navigate("/login"));
+  };
+
+  useEffect(() => {
+    validatePermissions();
+  }, []);
+
 
   return (
     <>
       <button
+        onClick={() => {
+          setHidden(!hidden);
+        }}
         className={
           "w-20 h-10 z-10 shadow-lg justify-center items-center sticky top-4 left-8 md:hidden transition-[background] rounded-full bg-primary flex"
         }
@@ -80,23 +105,39 @@ export default function Nav() {
         >
           <box-icon color="white" name="x"></box-icon>
         </button>
-        {routes.map((route, index) => (
-          <Link
-            onClick={() => {
-              setHidden(true);
-              if(!route.path) window.history.back();
-            }}
-            className={
-              "w-full h-10 rounded-lg flex bg-secondary/50 transition-all hover:bg-secondary justify-start px-8 items-center gap-3 " +
-              route.css
-            }
-            key={index}
-            to={route.path ?? ".."}
+        {routes.map((route, index) =>
+          permissions?.map((x) => x.name)?.includes(route.permission) ||
+          permissions?.map((x) => x.name)?.includes("SUPERADMIN") ||
+          !route.permission ? (
+            <Link
+              onClick={() => {
+                setHidden(true);
+                if (!route.path) window.history.back();
+              }}
+              className={
+                "w-full h-10 rounded-lg flex bg-secondary/50 transition-all hover:bg-secondary justify-start px-8 items-center gap-3 " +
+                route.css
+              }
+              key={index}
+              to={route.path ?? ".."}
+            >
+              {route.icon}
+              {translations.navPaths[route.name]}
+            </Link>
+          ) : (
+            <></>
+          )
+        )}
+        <div className="flex flex-col items-start w-full py-4 pr-12 rounded-lg bg-secondary/50 justify-start px-4 relative">
+          <p>{user?.fullName}</p>
+          <p className="italic text-sm">@{user?.username}</p>
+          <div
+            onClick={logout}
+            className="absolute cursor-pointer top-4 right-3 hover:scale-110 transition-all"
           >
-            {route.icon}
-            {translations.navPaths[route.name]}
-          </Link>
-        ))}
+            <box-icon color="white" name="log-out-circle"></box-icon>
+          </div>
+        </div>
       </nav>
     </>
   );

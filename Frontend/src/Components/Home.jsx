@@ -12,14 +12,14 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const productResponse = await api.get("/products");
-      const entriesResponse = await api.get("/inventory/entries");
-      
+      const data = await api
+        .get("/general/inventory-data")
+        .then((data) => data.data);
 
       setData({
-        productLength: productResponse.data.length,
-        movementsLength: entriesResponse.data.length,
-        entriesLenght: entriesResponse.data.length,
+        productLength: data.TotalProducts,
+        movementsLength: data.TotalOutputs + data.TotalEntries,
+        entriesLenght: data.TotalEntries,
       });
     };
     fetchData();

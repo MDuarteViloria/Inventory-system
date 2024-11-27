@@ -26,7 +26,7 @@ export default function Products() {
       ...x,
       Images: x.Images.map((y) => y.Url).join("\n"),
       Categories: x.Categories.map((y) => y.Name).join("\n"),
-      OriginProduct: x.OriginProduct.Name,
+      OriginProduct: x.OriginProduct?.Name ?? "-",
       Location: x.Location?.Name ?? "-",
     }));
     generateSheet(flatData, new Date().getTime() + "_products");

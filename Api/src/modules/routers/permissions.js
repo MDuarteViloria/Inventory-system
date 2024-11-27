@@ -53,6 +53,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/reset", () => {})
-
 export default router;

@@ -1,6 +1,7 @@
 import express from "express";
 import DB from "../database/connect-db.js";
 import config from "../../../config.js";
+import { AuthMiddleware } from "../controllers/Tokens.js";
 
 const router = express.Router();
 
@@ -22,7 +23,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.use(await AuthMiddleware("MOVIMIENTOS"))
+
 router.get("/entries", async (req, res) => {
+
   const sql =
     "SELECT id, User, Description, Date FROM EntriesHeaders ORDER BY Date DESC";
 
@@ -34,12 +38,12 @@ router.get("/entries", async (req, res) => {
     data = data.rows.map(async (hdr) => {
       return {
         ...hdr,
-        Lines: await database
+        Lines: req.query.withLines ? await database
           .query(
             "SELECT Quantity, Details, ProductId, ProviderId FROM EntriesLines WHERE EntryHeaderId = ?",
             [hdr.id]
           )
-          .then((x) => x.rows),
+          .then((x) => x.rows) : undefined,
       };
     });
 
@@ -117,6 +121,7 @@ router.get("/entries", async (req, res) => {
       }))
     );
 
+    
     res.json(data);
   } catch (e) {
     console.error("Error al consultar:", e);
@@ -224,10 +229,202 @@ router.get("/entries/:id", async (req, res) => {
   }
 });
 
+router.get("/outputs", async (req, res) => {
+  const sql =
+    "SELECT id, User, Description, Date FROM OutputsHeaders ORDER BY Date DESC";
+
+  const database = new DB();
+
+  try {
+    let data = await database.query(sql);
+
+    data = data.rows.map(async (hdr) => {
+      return {
+        ...hdr,
+        Lines: await database
+          .query(
+            "SELECT Quantity, Details, ProductId FROM OutputsLines WHERE OutputHeaderId = ?",
+            [hdr.id]
+          )
+          .then((x) => x.rows),
+      };
+    });
+
+    data = await Promise.all(data);
+
+    data = await Promise.all(
+      data.map(async (hdr) => ({
+        ...hdr,
+        Lines: req.query.withLines
+          ? await Promise.all(
+              hdr.Lines.map(async (line) => {
+                return {
+                  Quantity: line.Quantity,
+                  Details: line.Details,
+                  Product: await database
+                    .query(
+                      "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                      [line.ProductId]
+                    )
+                    .then((val) => val.rows[0])
+                    .then(async (product) => {
+                      return {
+                        id: product.id,
+                        Name: product.Name,
+                        Description: product.Description,
+                        Code: product.Code,
+                        BarCode: product.BarCode,
+                        Categories:
+                          (await database
+                            .query(
+                              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+                              [product.id]
+                            )
+                            .then((categories) => categories?.rows)) ?? [],
+                        Images:
+                          (await database
+                            .query(
+                              "SELECT ImageId FROM ProductImages WHERE ProductId = ?",
+                              [product.id]
+                            )
+                            .then((origin) =>
+                              origin?.rows.map((image) => ({
+                                Url:
+                                  config.backendUrl +
+                                  "/images/" +
+                                  image.ImageId,
+                                id: image.ImageId,
+                              }))
+                            )) ?? [],
+                        OriginProduct:
+                          (await database
+                            .query(
+                              "SELECT id, Name FROM OriginProducts WHERE id = ?",
+                              [product.OriginProductId]
+                            )
+                            .then((origin) => origin?.rows[0])) ?? null,
+                        Location:
+                          (await database
+                            .query(
+                              "SELECT id, Name FROM Locations WHERE id = ?",
+                              [product.LocationId]
+                            )
+                            .then((location) => location?.rows[0])) ?? null,
+                      };
+                    }),
+                };
+              })
+            )
+          : undefined,
+      }))
+    );
+
+    res.json(data);
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(500).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
+  }
+});
+
+router.get("/outputs/:id", async (req, res) => {
+  const sql =
+    "SELECT id, User, Description, Date FROM OutputsHeaders WHERE id = ?";
+
+  const database = new DB();
+
+  try {
+    let data = await database.query(sql, [req.params.id]);
+
+    if (!data.rows[0]) {
+      return res
+        .status(404)
+        .json({ success: false, error: "No se encontraron resultados" });
+    }
+
+    data = {
+      ...data.rows[0],
+      Lines: await database
+        .query(
+          "SELECT Quantity, Details, ProductId FROM OutputsLines WHERE OutputHeaderId = ?",
+          [data.rows[0]?.id]
+        )
+        .then((x) => x.rows),
+    };
+
+    data = {
+      ...data,
+      Lines: await Promise.all(
+        data.Lines.map(async (line) => {
+          return {
+            Quantity: line.Quantity,
+            Details: line.Details,
+            Product: await database
+              .query(
+                "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                [line.ProductId]
+              )
+              .then((val) => val.rows[0])
+              .then(async (product) => {
+                return {
+                  id: product.id,
+                  Name: product.Name,
+                  Description: product.Description,
+                  Code: product.Code,
+                  BarCode: product.BarCode,
+                  Categories:
+                    (await database
+                      .query(
+                        "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
+                        [product.id]
+                      )
+                      .then((categories) => categories?.rows)) ?? [],
+                  Images:
+                    (await database
+                      .query(
+                        "SELECT ImageId FROM ProductImages WHERE ProductId = ?",
+                        [product.id]
+                      )
+                      .then((origin) =>
+                        origin?.rows.map((image) => ({
+                          Url: config.backendUrl + "/images/" + image.ImageId,
+                          id: image.ImageId,
+                        }))
+                      )) ?? [],
+                  OriginProduct:
+                    (await database
+                      .query(
+                        "SELECT id, Name FROM OriginProducts WHERE id = ?",
+                        [product.OriginProductId]
+                      )
+                      .then((origin) => origin?.rows[0])) ?? null,
+                  Location:
+                    (await database
+                      .query("SELECT id, Name FROM Locations WHERE id = ?", [
+                        product.LocationId,
+                      ])
+                      .then((location) => location?.rows[0])) ?? null,
+                };
+              }),
+          };
+        })
+      ),
+    };
+
+    res.json(data);
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(500).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
+  }
+});
+
 router.post("/entries", async (req, res) => {
   const { Lines, Description } = req.body;
 
-  if (!Lines || (!Description && Description !== "") || !User) {
+  if (!Lines || (!Description && Description !== "")) {
     return res
       .status(400)
       .json({ success: false, error: "Todos los campos son obligatorios" });
@@ -278,9 +475,11 @@ router.post("/entries", async (req, res) => {
       }
     }
 
-    await database.query(headerSql, [req.locals.user.FullName, Description]).then((result) => {
-      headerId = result.rows[0].id;
-    });
+    await database
+      .query(headerSql, [req.locals.user.FullName, Description])
+      .then((result) => {
+        headerId = result.rows[0].id;
+      });
 
     await Promise.all(
       Lines.map(async (line) => {
@@ -320,9 +519,9 @@ router.post("/entries", async (req, res) => {
 });
 
 router.post("/outputs", async (req, res) => {
-  const { Lines, Description, User } = req.body;
+  const { Lines, Description } = req.body;
 
-  if (!Lines || (!Description && Description !== "") || !User) {
+  if (!Lines || (!Description && Description !== "")) {
     return res
       .status(400)
       .json({ success: false, error: "Todos los campos son obligatorios" });
@@ -390,9 +589,11 @@ router.post("/outputs", async (req, res) => {
       }
     }
 
-    await database.query(headerSql, [User, Description]).then((result) => {
-      headerId = result.rows[0].id;
-    });
+    await database
+      .query(headerSql, [req.locals.user.FullName, Description])
+      .then((result) => {
+        headerId = result.rows[0].id;
+      });
 
     await Promise.all(
       Lines.map(async (line) => {
@@ -429,5 +630,26 @@ router.post("/outputs", async (req, res) => {
     database.close();
   }
 });
+
+router.get("/product/:id", async (req, res) => {
+  const sql =
+    "SELECT P.id, SP.Quantity, P.Name, P.Description, P.Code, P.BarCode, P.LocationId, P.OriginProductId FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId WHERE P.Deleted = FALSE AND P.id = ?";
+  const database = new DB();
+
+  try {
+    let { rows: [data] } = await database.query(sql, [req.params.id]);
+
+    if(!data) {
+      return res.status(404).json({ success: false, error: "No se encontraron resultados" });
+    }
+
+    res.json(data);
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(404).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
+  }
+})
 
 export default router;

@@ -42,7 +42,6 @@ export default function ImageSelector({onSelected, label, count=null}) {
                 return {data: response.data?.images ?? [], drawerImage: ["url"]};
               }
             }
-            
           );
           if (selected) {
             onSelected(selected);

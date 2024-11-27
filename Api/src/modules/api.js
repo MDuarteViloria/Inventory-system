@@ -13,6 +13,8 @@ import routerProviders from "./routers/providers.js";
 import routerInventory from "./routers/inventory.js";
 import routerUsers from "./routers/users.js";
 import routerLogin from "./routers/login.js";
+import routerGeneral from "./routers/general.js";
+import routerPermissions from "./routers/permissions.js";
 import { AuthMiddleware } from "./controllers/Tokens.js";
 
 export async function createServer() {
@@ -26,14 +28,16 @@ export async function createServer() {
 
   // Routers
   app.use("/auth", routerLogin);
+  app.use("/general", await AuthMiddleware(), routerGeneral)
   app.use("/products", await AuthMiddleware("PRODUCTOS"), routerProducts);
   app.use("/images", await AuthMiddleware("IMAGENES", ["GET"]), routerImages);
-  app.use("/locations", await AuthMiddleware("UBICACIONES"), routerLocations);
-  app.use("/origins", await AuthMiddleware("ORIGENES"), routerOrigins);
-  app.use("/categories", await AuthMiddleware("CATEGORIAS"), routerCategories);
+  app.use("/locations", await AuthMiddleware("PRODUCTOS"), routerLocations);
+  app.use("/origins", await AuthMiddleware("PRODUCTOS"), routerOrigins);
+  app.use("/categories", await AuthMiddleware("PRODUCTOS"), routerCategories);
   app.use("/providers", await AuthMiddleware("PROVEEDORES"), routerProviders);
   app.use("/inventory", await AuthMiddleware("INVENTARIO"), routerInventory);
   app.use("/users", await AuthMiddleware("USUARIOS"), routerUsers);
+  app.use("/permissions", await AuthMiddleware("USUARIOS"), routerPermissions);
 
   // Abrir servidor.
   app.listen(config.port, () =>

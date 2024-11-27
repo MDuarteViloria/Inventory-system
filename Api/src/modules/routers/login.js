@@ -70,7 +70,7 @@ router.get("/validate", async (req, res) => {
   if (req.cookies.authorization) {
     const database = new DB();
 
-    const {data: cookieData} = await decodeToken(
+    const { data: cookieData } = await decodeToken(
       req.cookies.authorization.split(" ")[1]
     );
 
@@ -80,12 +80,17 @@ router.get("/validate", async (req, res) => {
       cookieData.id,
     ]);
 
+    const userSql = "SELECT * FROM Users WHERE id = ?";
+    const {rows: [user]} = await database.query(userSql, [
+      cookieData.id,
+    ]);
+
     res.cookie(
       "authorization",
       "JWT " +
         generateToken({
-          id: cookieData.id,
-          username: cookieData.username,
+          id: user.id,
+          username: user.Username,
           permissions: userPermissions.rows.map((x) => ({
             id: x.IdPermission,
             to: {
@@ -98,8 +103,9 @@ router.get("/validate", async (req, res) => {
         }),
       { secure: false }
     );
-    res.status(200).json(
-      userPermissions.rows.map((x) => ({
+    res.status(200).json({
+      user: { id: cookieData.id, username: user.Username, fullName: user.FullName },
+      permissions: userPermissions.rows.map((x) => ({
         id: x.IdPermission,
         name: x.UniqueName,
         to: {
@@ -108,8 +114,8 @@ router.get("/validate", async (req, res) => {
           update: x.ToUpdate,
           get: x.ToGet,
         },
-      }))
-    );
+      })),
+    });
   } else {
     res.status(200).json({
       authenticated: false,

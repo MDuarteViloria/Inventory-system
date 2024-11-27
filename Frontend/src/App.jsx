@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Components/Home.jsx";
 import PrincipalLayout from "./Components/Subcomponents/PrincipalLayout.jsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import contexts from "./Sources/Contexts.js";
 import es_base from "./Sources/es_base.js";
 import Products from "./Components/Products.jsx";
@@ -17,37 +17,48 @@ import InventoryEntryNew from "./Components/InventoryEntryNew.jsx";
 import SeeEntry from "./Components/SeeEntry.jsx";
 import Login from "./Components/Login.jsx";
 import api from "./Sources/Api.js";
+import InventoryOutput from "./Components/InventoryOutput.jsx";
+import InventoryOutputNew from "./Components/InventoryOutputNew.jsx";
+import Settings from "./Components/Settings.jsx";
+import SeeOutput from "./Components/SeeOutput.jsx";
+import fr_base from "./Sources/fr_base.js";
+import en_base from "./Sources/en_base.js";
+import Users from "./Components/Users.jsx";
+import Images from "./Components/Images.jsx";
 
 function App() {
-  const [lang, setLang] = useState("es");
-  const [permissions, setPermissions] = useState([]);
+  const [lang, setLang] = useState(
+    localStorage.getItem("lang") ? localStorage.getItem("lang") : "es"
+  );
+  const [user, setUser] = useState({});
 
-  useEffect(() => {
-    const validatePermissions = async () => {
-      try {
-        const response = await api.get("/auth/permissions");
-        if (response.status === 200) {
-          setPermissions(response.data);
-        }
-      } catch (error) {
-        window.location.href = "/login";
+  const validatePermissions = async () => {
+    try {
+      const response = await api.get("/auth/validate");
+      if (response.status === 200) {
+        setUser(response.data);
       }
-
-      validatePermissions();
-    };
-  }, []);
+    } catch (error) {
+      window.location.href = "/login";
+    }
+  };
 
   return (
     <>
       <div className="light">
         <contexts.langContext.Provider
-          value={{ permissions, lang: { es: es_base }[lang], setLang }}
+          value={{
+            user,
+            validatePermissions,
+            lang: { es: es_base, fr: fr_base, en: en_base }[lang],
+            setLang,
+          }}
         >
           <BrowserRouter>
             <PrincipalLayout>
               <Routes>
-                <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/new" element={<ProductNew />} />
                 <Route path="/products/edit/:id" element={<ProductEdit />} />
@@ -57,10 +68,22 @@ function App() {
                 <Route path="/providers" element={<Providers />} />
                 <Route path="/inventory" element={<Inventory />} />
                 <Route path="/inventory/entries" element={<InventoryEntry />} />
+                <Route
+                  path="/inventory/outputs"
+                  element={<InventoryOutput />}
+                />
+                <Route path="/inventory/outputs/:id" element={<SeeOutput />} />
                 <Route path="/inventory/entries/:id" element={<SeeEntry />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/images" element={<Images />} />
                 <Route
                   path="/inventory/entries/new"
                   element={<InventoryEntryNew />}
+                />
+                <Route
+                  path="/inventory/outputs/new"
+                  element={<InventoryOutputNew />}
                 />
               </Routes>
             </PrincipalLayout>

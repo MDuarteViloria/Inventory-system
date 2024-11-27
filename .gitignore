@@ -44,3 +44,7 @@ yarn.lock
 
 # Public
 /Api/src/public/images/**
+
+# DIST
+/Frontend/dist
+/Frontend/dist/**

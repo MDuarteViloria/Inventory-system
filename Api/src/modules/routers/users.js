@@ -13,6 +13,17 @@ router.get("/", async (req, res) => {
 
   try {
     let data = await database.query(sql);
+    data.rows = await Promise.all(
+      data.rows.map(async (x) => ({
+        ...x,
+        Permissions: await database
+          .query(
+            "SELECT IdPermission AS id, P.UniqueName FROM UserPermissions INNER JOIN Permissions P ON UserPermissions.IdPermission = P.id WHERE IdUser = ?",
+            [x.id]
+          )
+          .then((x) => x.rows),
+      }))
+    );
     res.json(data.rows);
   } catch (e) {
     console.error("Error al consultar:", e);
@@ -29,10 +40,20 @@ router.get("/:id", async (req, res) => {
   const database = new DB();
 
   try {
+    
     let data = await database.query(sql, [req.params.id]);
     if (data.rows.length === 0) {
       return res.status(404).send("El usuario no existe");
     } else {
+      data.rows[0] = {
+        ...data.rows[0],
+        Permissions: await database
+          .query(
+            "SELECT IdPermission AS id, P.UniqueName FROM UserPermissions INNER JOIN Permissions P ON UserPermissions.IdPermission = P.id WHERE IdUser = ?",
+            [data.rows[0].id]
+          )
+          .then((x) => x.rows),
+      }
       res.json(data.rows[0]);
     }
   } catch (e) {
@@ -70,17 +91,11 @@ router.patch("/:id", async (req, res) => {
               throw new Error(err);
             } else {
               let SQL = await database.query(
-                "UPDATE Users SET Password = ? WHERE id = ?",
-                [Username, hash]
+                "UPDATE Users SET Password = ? WHERE id = ? RETURNING id",
+                [hash, req.params.id]
               );
 
-              res.cookie(
-                "authorization",
-                "JWT " + generateToken({ id: SQL[0].id }),
-                { secure: false }
-              );
-
-              res.json({
+              return res.json({
                 success: true,
                 id: SQL.rows[0].id,
               });
@@ -173,7 +188,6 @@ router.delete("/:id", async (req, res) => {
     res.json({
       success: dbUserRes.ready,
     });
-    
   } catch (e) {
     console.error("Error al eliminar:", e);
     res
