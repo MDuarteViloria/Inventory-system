@@ -44,7 +44,7 @@ package-lock.json
 yarn.lock
 
 # Public
-/Api/src/public/images/**
+**/Api/src/public/images/**
 
 # DIST
 /Frontend/dist
