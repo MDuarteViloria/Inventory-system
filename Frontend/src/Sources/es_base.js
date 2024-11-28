@@ -289,6 +289,7 @@ export default {
     },
     permissions: {
       edit: "Editar permisos",
+      editted: "Los permisos se han editado correctamente",
     },
     create: {
       success: "El usuario se ha creado correctamente",

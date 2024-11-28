@@ -5,7 +5,7 @@ import InputLabel from "./Subcomponents/Label";
 import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
-  const { lang, setLang } = useContext(Contexts.langContext);
+  const { lang, setLang, user: { permissions } } = useContext(Contexts.langContext);
   const navigate = useNavigate();
 
   const headButtons = [
@@ -18,7 +18,7 @@ export default function Settings() {
       title: lang.settings.images,
       onClick: () => navigate("/images"),
       permission: "IMAGENES",
-    },
+    }
   ];
 
   const langs = [
@@ -36,12 +36,12 @@ export default function Settings() {
     <>
       <Container>
         <Heading level="h1">{lang.navPaths.settings}</Heading>
-        <div className="grid grid-cols-1 my-8 gap-5 md:grid-cols-2 text-center">
-          {headButtons.map((btn, index) => (
+        <div className="flex flex-wrap my-8 gap-5 text-center">
+          {headButtons.map((btn, index) => permissions?.map(x => x.name).includes(btn.permission) && (
             <Container
               onClick={btn.onClick}
               key={index}
-              className="container-button [&_*]:leading-none md:p-8 p-4"
+              className="container-button min-w-1/2 w-1/3 flex-grow [&_*]:leading-none md:p-8 p-4"
             >
               <Heading
                 className="text-gray-700 font-medium md:text-base text-sm"

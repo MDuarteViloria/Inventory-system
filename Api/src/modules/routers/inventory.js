@@ -1,6 +1,6 @@
 import express from "express";
 import DB from "../database/connect-db.js";
-import config from "../../../config.js";
+import config from "../../config.js";
 import { AuthMiddleware } from "../controllers/Tokens.js";
 
 const router = express.Router();
@@ -65,7 +65,7 @@ router.get("/entries", async (req, res) => {
                     .then((val) => val[0]),
                   Product: await database
                     .query(
-                      "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                      "SELECT * FROM Products WHERE id = ?",
                       [line.ProductId]
                     )
                     .then((val) => val.rows[0])
@@ -170,7 +170,7 @@ router.get("/entries/:id", async (req, res) => {
               .then((val) => val.rows[0]),
             Product: await database
               .query(
-                "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                "SELECT * FROM Products WHERE id = ?",
                 [line.ProductId]
               )
               .then((val) => val.rows[0])
@@ -263,7 +263,7 @@ router.get("/outputs", async (req, res) => {
                   Details: line.Details,
                   Product: await database
                     .query(
-                      "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                      "SELECT * FROM Products WHERE id = ?",
                       [line.ProductId]
                     )
                     .then((val) => val.rows[0])
@@ -362,7 +362,7 @@ router.get("/outputs/:id", async (req, res) => {
             Details: line.Details,
             Product: await database
               .query(
-                "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE",
+                "SELECT * FROM Products WHERE id = ?",
                 [line.ProductId]
               )
               .then((val) => val.rows[0])

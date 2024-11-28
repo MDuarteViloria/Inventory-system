@@ -2,11 +2,13 @@
   "name": "inventory-desktop-app",
   "version": "1.0.0",
   "description": "",
-  "main": "src/electron.js",
+  "main": "./src/index.js",
+  "bin": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node ./src/modules/database/create-db.js",
     "dev": "node src/index.js",
-    "run:frontend": "cd ../my-electron-app && npm run start"
+    "build": "webpack --config webpack.config.cjs"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +26,13 @@
     "multer": "^1.4.5-lts.1",
     "react-router-dom": "^7.0.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "gulp": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
+    "path": "^0.12.7",
+    "uglify-js": "^3.19.3",
+    "webpack-cli": "^5.1.4"
   }
 }

@@ -11,7 +11,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export async function createDB() {
   const route = path.resolve(__dirname, "../../sources/inventory-app.db");
 
-  const existDB = fs.existsSync(route);
+  let existDB = fs.existsSync(route);
+
+  if (existDB) {
+    const tx = fs.readFileSync(route, { encoding: "utf-8" });
+    if (tx === "") {
+      fs.unlinkSync(route);
+      existDB = false;
+    }
+  }
+  
 
   // Si no existe la base de datos, la crea.
   if (!existDB) {
@@ -24,8 +33,19 @@ export async function createDB() {
 
     await new Promise((resolve) => newDB.exec(SQL, resolve));
 
-    await Promise.all(permissionsList.map(async (permission) => {
-      await new Promise((resolve) => newDB.exec(`INSERT INTO Permissions (UniqueName) VALUES ('${permission}')`, resolve));
-    }))
+    await Promise.all(
+      permissionsList.map(async (permission) => {
+        return await new Promise((resolve) =>
+          newDB.exec(
+            `INSERT INTO Permissions (UniqueName) VALUES ('${permission}')`,
+            resolve
+          )
+        );
+      })
+    );
+
+    await new Promise(x => newDB.close(x));
   }
 }
+
+createDB();

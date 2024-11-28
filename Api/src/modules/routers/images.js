@@ -4,7 +4,7 @@ import saveImage from "../controllers/SaveImage.js";
 import createMemoryStorage from "../controllers/CreateMemoryStorage.js";
 import DB from "../database/connect-db.js";
 import imageType from "image-type";
-import config from "../../../config.js";
+import config from "../../config.js";
 
 const router = express.Router();
 const upload = createMemoryStorage();

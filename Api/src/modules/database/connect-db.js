@@ -3,11 +3,11 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const route = path.join(__dirname, "../../sources/inventory-app.db");
 class DB {
   #db;
   open() {
     if (this.#db == undefined) {
+      const route = path.join(__dirname, "../../sources/inventory-app.db");
       this.#db = new sqlite3.Database(route);
     }
     return this.#db;

@@ -17,6 +17,7 @@ yarn-error.log*
 Thumbs.db
 
 # Build output directories
+**/dist
 /dist
 /frontend/build
 

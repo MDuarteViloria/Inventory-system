@@ -15,7 +15,7 @@ router.patch("/", async (req, res) => {
     let delSQL =
       "DELETE FROM UserPermissions WHERE IdUser = ? AND IdPermission <> 1";
     let SQL =
-      "INSERT INTO UserPermissions (IdUser, IdPermission) VALUES (?, ?)";
+      "INSERT INTO UserPermissions (IdUser, IdPermission, ToGet, ToUpdate, ToDelete, ToInsert) VALUES (?, ?, 1, 1, 1, 1)";
 
     const database = new DB();
 

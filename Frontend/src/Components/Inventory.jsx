@@ -8,7 +8,8 @@ import { ProductDropdown } from "./Subcomponents/ProductsTable";
 import { DocumentText, Plus } from "@medusajs/icons";
 
 export default function Inventory() {
-  const { lang } = useContext(Contexts.langContext);
+  const { lang, user: { permissions } } = useContext(Contexts.langContext);
+
   const navigate = useNavigate();
 
   const [stocks, setStocks] = useState(null);
@@ -40,7 +41,7 @@ export default function Inventory() {
         <Heading level="h1">{lang.navPaths.inventory}</Heading>
       </Container>
       <div className="flex gap-4 mt-5 text-center">
-        {headButtons.map((btn, index) => (
+        {permissions?.map(x => x.name).includes("MOVIMIENTOS") || permissions?.map(x => x.name).includes("SUPERADMIN") && headButtons.map((btn, index) => (
           <Container
             onClick={btn.onClick}
             key={index}

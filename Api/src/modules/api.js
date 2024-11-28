@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
-import config from "../../config.js";
+import config from "../config.js";
 import routerProducts from "./routers/products.js";
 import routerImages from "./routers/images.js";
 import routerOrigins from "./routers/origins.js ";

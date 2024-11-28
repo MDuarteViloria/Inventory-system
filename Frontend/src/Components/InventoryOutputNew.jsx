@@ -255,6 +255,14 @@ function InventoryLineDropdown({ setLines, lines, index, lang }) {
     );
 
     if (quantity && (quantity > 0 || quantity !== "")) {
+
+      const productStock = await Api.get(
+        "/inventory/product/" + lines[index].product.id
+      ).then((x) => x.data);
+
+      if (productStock.Quantity < quantity)
+        return toast.error(lang.inventory.outputCreate.stock);
+      
       setLines(
         lines.map((line, i) =>
           i === index ? { ...line, quantity, images, details } : line
@@ -307,6 +315,7 @@ function InventoryLineDropdown({ setLines, lines, index, lang }) {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
+      <Toaster/>
     </>
   );
 }
