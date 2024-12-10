@@ -10,6 +10,8 @@ export default {
     locations: "Locations",
     categories: "Categories",
     origins: "Origins",
+    images: "Images",
+    users: "Users",
   },
   dashboard: {
     products: "Products",
@@ -36,7 +38,6 @@ export default {
     imSure: "I'm sure",
     pleaseConfirm: "Please confirm",
     deletedSuccess: "Successfully deleted",
-    images: "Images",
   },
   origins: {
     selfName: "Origin",
@@ -74,6 +75,7 @@ export default {
   inventory: {
     general: {
       seeEntry: "View Inventory Entry",
+      seeOutput: "View Inventory Output",
       id: "ID",
       name: "Name",
       quantity: "Quantity",
@@ -106,6 +108,8 @@ export default {
       details: "Detail",
       provider: "Provider",
       description: "Description",
+      output: "Inventory Output",
+      entry: "Inventory Entry",
     },
     entryCreate: {
       success: "The entry has been successfully created",
@@ -260,6 +264,39 @@ export default {
     images: "Images",
     users: "Users",
     language: "Language",
+  },
+  images: {
+    new: "Add Image",
+    addedSuccess: "Image added successfully",
+    sureDelete: "It will be removed from all products, outputs, and entries",
+  },
+  users: {
+    selfName: "User",
+    new: "New user",
+    edit: "Edit user",
+    general: {
+      id: "ID",
+      fullname: "Full Name",
+      username: "Username",
+      password: "Password",
+    },
+    placeholders: {
+      fullname: "Full Name",
+      username: "Username",
+      password: "Password, Leave empty to keep",
+      permissions: "Permissions",
+    },
+    permissions: {
+      edit: "Edit permissions",
+      editted: "Permissions have been successfully edited",
+    },
+    create: {
+      success: "The user has been successfully created",
+      validations: {
+        badParams: "The name or username is not valid",
+        editted: "The user has been successfully edited",
+      },
+    },
   },
   tables: {
     of: "of",

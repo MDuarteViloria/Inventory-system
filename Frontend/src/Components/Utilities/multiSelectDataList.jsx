@@ -16,7 +16,8 @@ export default async function multiSelectDataList(
   saveButtonText = "Guardar",
   noItems = "No hay elementos",
   addFunction,
-  alreadySelectedIndexes
+  alreadySelectedIndexes,
+  everyTimeSelected
 ) {
   const procededData = data.map((item) => {
     return {
@@ -44,6 +45,7 @@ export default async function multiSelectDataList(
         addButtonText={addButtonText}
         addFunction={addFunction}
         alreadySelectedIndexes={alreadySelectedIndexes}
+        everyTimeSelected={everyTimeSelected}
       />
     );
   }).then((selected) => {
@@ -65,7 +67,8 @@ function DrawerList({
   addButtonText,
   addFunction,
   noItems,
-  alreadySelectedIndexes
+  alreadySelectedIndexes,
+  everyTimeSelected
 }) {
   const [opened, setOpened] = useState(undefined);
   const [fetchedData, setFetchedData] = useState([]);
@@ -115,7 +118,7 @@ function DrawerList({
                 <Button
                   className={
                     "w-full !text-left px-4 font-normal justify-start text-base min-h-max " +
-                    (selected.includes(index)
+                    (selected.includes(index) || everyTimeSelected.includes(index)
                       ? "shadow-borders-interactive-with-focus"
                       : "hover:!shadow-borders-interactive-with-active")
                   }

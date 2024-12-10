@@ -216,7 +216,8 @@ function UserDropDown({ user, lang, fetchData }) {
       lang.general.save,
       lang.general.noItems,
       undefined,
-      alreadySelected
+      alreadySelected,
+      [1]
     );
     if (selectedPermissions.length === 0) return;
 

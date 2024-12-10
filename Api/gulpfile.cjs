@@ -17,9 +17,9 @@ const paths = {
 
 // Tarea para minificar JavaScript
 function scripts() {
-  return gulp.src(paths.scripts.src, { sourcemaps: true })
+  return gulp.src(paths.scripts.src, { sourcemaps: false })
     .pipe(sourcemaps.init())
-    .pipe(uglify())
+    .pipe(uglify({compress: true}))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.scripts.dest));
 }

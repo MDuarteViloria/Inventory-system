@@ -25,6 +25,7 @@ export default function Settings() {
     { label: "Español", value: "es" },
     { label: "English", value: "en" },
     { label: "Français", value: "fr" },
+    { label: "奇诺", value: "zh" },
   ];
 
   const changeLang = (e) => {

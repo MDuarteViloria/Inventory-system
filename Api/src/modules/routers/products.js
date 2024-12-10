@@ -270,7 +270,7 @@ router.post("/", async (req, res) => {
     Images,
   } = req.body;
 
-  if (!Name || !Description || !Code) {
+  if (!Name || !Code) {
     return res
       .status(400)
       .json({ success: false, error: "Todos los campos son obligatorios" });

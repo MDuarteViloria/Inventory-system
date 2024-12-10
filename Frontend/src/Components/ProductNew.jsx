@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import {
   Heading,
@@ -134,6 +134,7 @@ export default function ProductNew() {
         } else {
           toast.error(lang.products.create.validations.error);
         }
+        e.target.disabled = false;
       });
   };
 

@@ -1,5 +1,3 @@
-import { Button } from "@medusajs/ui";
-
 export default {
   short: "fr",
   navPaths: {
@@ -262,6 +260,39 @@ export default {
     images: "Images",
     users: "Utilisateurs",
     language: "Langue",
+  },
+  images: {
+    new: "Ajouter une image",
+    addedSuccess: "Image ajoutée avec succès",
+    sureDelete: "Elle sera supprimée de tous les produits, sorties et entrées",
+  },
+  users: {
+    selfName: "Utilisateur",
+    new: "Nouvel utilisateur",
+    edit: "Modifier l'utilisateur",
+    general: {
+      id: "ID",
+      fullname: "Nom Complet",
+      username: "Nom d'utilisateur",
+      password: "Mot de passe",
+    },
+    placeholders: {
+      fullname: "Nom Complet",
+      username: "Nom d'utilisateur",
+      password: "Mot de passe, Laissez vide pour conserver",
+      permissions: "Permissions",
+    },
+    permissions: {
+      edit: "Modifier les permissions",
+      editted: "Les permissions ont été modifiées avec succès",
+    },
+    create: {
+      success: "L'utilisateur a été créé avec succès",
+      validations: {
+        badParams: "Le nom ou le nom d'utilisateur n'est pas valide",
+        editted: "L'utilisateur a été modifié avec succès",
+      },
+    },
   },
   tables: {
     of: "de",
