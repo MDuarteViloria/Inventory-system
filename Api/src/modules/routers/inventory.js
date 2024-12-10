@@ -23,10 +23,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.use(await AuthMiddleware("MOVIMIENTOS"))
+router.use(await AuthMiddleware("MOVIMIENTOS"));
 
 router.get("/entries", async (req, res) => {
-
   const sql =
     "SELECT id, User, Description, Date FROM EntriesHeaders ORDER BY Date DESC";
 
@@ -38,12 +37,14 @@ router.get("/entries", async (req, res) => {
     data = data.rows.map(async (hdr) => {
       return {
         ...hdr,
-        Lines: req.query.withLines ? await database
-          .query(
-            "SELECT Quantity, Details, ProductId, ProviderId FROM EntriesLines WHERE EntryHeaderId = ?",
-            [hdr.id]
-          )
-          .then((x) => x.rows) : undefined,
+        Lines: req.query.withLines
+          ? await database
+              .query(
+                "SELECT Quantity, Details, ProductId, ProviderId FROM EntriesLines WHERE EntryHeaderId = ?",
+                [hdr.id]
+              )
+              .then((x) => x.rows)
+          : undefined,
       };
     });
 
@@ -64,10 +65,9 @@ router.get("/entries", async (req, res) => {
                     ])
                     .then((val) => val[0]),
                   Product: await database
-                    .query(
-                      "SELECT * FROM Products WHERE id = ?",
-                      [line.ProductId]
-                    )
+                    .query("SELECT * FROM Products WHERE id = ?", [
+                      line.ProductId,
+                    ])
                     .then((val) => val.rows[0])
                     .then(async (product) => {
                       return {
@@ -121,7 +121,6 @@ router.get("/entries", async (req, res) => {
       }))
     );
 
-    
     res.json(data);
   } catch (e) {
     console.error("Error al consultar:", e);
@@ -150,7 +149,7 @@ router.get("/entries/:id", async (req, res) => {
       ...data.rows[0],
       Lines: await database
         .query(
-          "SELECT Quantity, Details, ProductId, ProviderId FROM EntriesLines WHERE EntryHeaderId = ?",
+          "SELECT id, Quantity, Details, ProductId, ProviderId FROM EntriesLines WHERE EntryHeaderId = ?",
           [data.rows[0]?.id]
         )
         .then((x) => x.rows),
@@ -169,10 +168,7 @@ router.get("/entries/:id", async (req, res) => {
               ])
               .then((val) => val.rows[0]),
             Product: await database
-              .query(
-                "SELECT * FROM Products WHERE id = ?",
-                [line.ProductId]
-              )
+              .query("SELECT * FROM Products WHERE id = ?", [line.ProductId])
               .then((val) => val.rows[0])
               .then(async (product) => {
                 return {
@@ -215,6 +211,16 @@ router.get("/entries/:id", async (req, res) => {
                       .then((location) => location?.rows[0])) ?? null,
                 };
               }),
+            Images: await database
+              .query("SELECT ImageId FROM EntriesImages WHERE EntryId = ?", [
+                line.id,
+              ])
+              .then((images) =>
+                images?.rows.map((image) => ({
+                  Url: config.backendUrl + "/images/" + image.ImageId,
+                  id: image.ImageId,
+                }))
+              ),
           };
         })
       ),
@@ -262,10 +268,9 @@ router.get("/outputs", async (req, res) => {
                   Quantity: line.Quantity,
                   Details: line.Details,
                   Product: await database
-                    .query(
-                      "SELECT * FROM Products WHERE id = ?",
-                      [line.ProductId]
-                    )
+                    .query("SELECT * FROM Products WHERE id = ?", [
+                      line.ProductId,
+                    ])
                     .then((val) => val.rows[0])
                     .then(async (product) => {
                       return {
@@ -347,7 +352,7 @@ router.get("/outputs/:id", async (req, res) => {
       ...data.rows[0],
       Lines: await database
         .query(
-          "SELECT Quantity, Details, ProductId FROM OutputsLines WHERE OutputHeaderId = ?",
+          "SELECT id, Quantity, Details, ProductId FROM OutputsLines WHERE OutputHeaderId = ?",
           [data.rows[0]?.id]
         )
         .then((x) => x.rows),
@@ -361,10 +366,7 @@ router.get("/outputs/:id", async (req, res) => {
             Quantity: line.Quantity,
             Details: line.Details,
             Product: await database
-              .query(
-                "SELECT * FROM Products WHERE id = ?",
-                [line.ProductId]
-              )
+              .query("SELECT * FROM Products WHERE id = ?", [line.ProductId])
               .then((val) => val.rows[0])
               .then(async (product) => {
                 return {
@@ -407,6 +409,16 @@ router.get("/outputs/:id", async (req, res) => {
                       .then((location) => location?.rows[0])) ?? null,
                 };
               }),
+            Images: await database
+              .query("SELECT ImageId FROM OutputsImages WHERE OutputId = ?", [
+                line.id,
+              ])
+              .then((images) =>
+                images?.rows.map((image) => ({
+                  Url: config.backendUrl + "/images/" + image.ImageId,
+                  id: image.ImageId,
+                }))
+              ),
           };
         })
       ),
@@ -637,10 +649,14 @@ router.get("/product/:id", async (req, res) => {
   const database = new DB();
 
   try {
-    let { rows: [data] } = await database.query(sql, [req.params.id]);
+    let {
+      rows: [data],
+    } = await database.query(sql, [req.params.id]);
 
-    if(!data) {
-      return res.status(404).json({ success: false, error: "No se encontraron resultados" });
+    if (!data) {
+      return res
+        .status(404)
+        .json({ success: false, error: "No se encontraron resultados" });
     }
 
     res.json(data);
@@ -650,6 +666,6 @@ router.get("/product/:id", async (req, res) => {
   } finally {
     database.close();
   }
-})
+});
 
 export default router;

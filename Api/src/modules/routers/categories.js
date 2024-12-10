@@ -87,7 +87,6 @@ router.delete("/:id", async (req, res) => {
 
   try {
     const dbCategoriesRes = await database.query(sql, [req.params.id]);
-h
     res.json({
       success: dbCategoriesRes.ready,
     });

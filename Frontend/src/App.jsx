@@ -52,6 +52,7 @@ function App() {
             user,
             validatePermissions,
             lang: { es: es_base, fr: fr_base, en: en_base, zh: zh_base }[lang],
+            selectedLang: lang,
             setLang,
           }}
         >

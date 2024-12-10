@@ -58,7 +58,7 @@ export default function Products() {
   };
 
   const filterProducts = (product) => {
-    console.log(filters.location)
+    console.log(filters.location);
 
     if (
       filters.category.length > 0 &&
