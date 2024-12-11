@@ -12,8 +12,8 @@ export function MultiSelect({ data, onSelected, selecteds, children }) {
         <DropdownMenu.Trigger onClick={() => setOpen(!open)} asChild>
           {children}
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          <div className="max-h-36 h-36 overflow-y-auto">
+        <DropdownMenu.Content className="dropdownChild">
+          <div>
             {data.map((item, i) => (
               <DropdownMenu.Item
                 onClick={() => onSelected(item)}

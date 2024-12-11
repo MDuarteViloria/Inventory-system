@@ -2,19 +2,26 @@ import express from "express";
 import DB from "../database/connect-db.js";
 import config from "../../config.js";
 import { AuthMiddleware } from "../controllers/Tokens.js";
+import getProductData from "../controllers/GetProductData.js";
 
 const router = express.Router();
 
 // GET ALL
 router.get("/", async (req, res) => {
   const sql =
-    "SELECT P.id, SP.Quantity, P.Name, P.Description, P.Code, P.BarCode, P.LocationId, P.OriginProductId FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId WHERE P.Deleted = FALSE";
+    "SELECT P.id, SP.Quantity FROM Products P INNER JOIN StockProducts SP ON P.id = SP.ProductId WHERE P.Deleted = FALSE";
   const database = new DB();
 
   try {
     let data = await database.query(sql);
+    data = data.rows.map(async (prod) => {
+      return {
+        ...prod,
+        ...await getProductData(prod.id),
+      };
+    })
 
-    res.json(data.rows);
+    res.json(await Promise.all(data));
   } catch (e) {
     console.error("Error al consultar:", e);
     res.status(404).send("Error al consultar la base de datos");
@@ -167,50 +174,7 @@ router.get("/entries/:id", async (req, res) => {
                 line.ProviderId,
               ])
               .then((val) => val.rows[0]),
-            Product: await database
-              .query("SELECT * FROM Products WHERE id = ?", [line.ProductId])
-              .then((val) => val.rows[0])
-              .then(async (product) => {
-                return {
-                  id: product.id,
-                  Name: product.Name,
-                  Description: product.Description,
-                  Code: product.Code,
-                  BarCode: product.BarCode,
-                  Categories:
-                    (await database
-                      .query(
-                        "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-                        [product.id]
-                      )
-                      .then((categories) => categories?.rows)) ?? [],
-                  Images:
-                    (await database
-                      .query(
-                        "SELECT ImageId FROM ProductImages WHERE ProductId = ?",
-                        [product.id]
-                      )
-                      .then((origin) =>
-                        origin?.rows.map((image) => ({
-                          Url: config.backendUrl + "/images/" + image.ImageId,
-                          id: image.ImageId,
-                        }))
-                      )) ?? [],
-                  OriginProduct:
-                    (await database
-                      .query(
-                        "SELECT id, Name FROM OriginProducts WHERE id = ?",
-                        [product.OriginProductId]
-                      )
-                      .then((origin) => origin?.rows[0])) ?? null,
-                  Location:
-                    (await database
-                      .query("SELECT id, Name FROM Locations WHERE id = ?", [
-                        product.LocationId,
-                      ])
-                      .then((location) => location?.rows[0])) ?? null,
-                };
-              }),
+            Product: await getProductData(line.ProductId, "id"),
             Images: await database
               .query("SELECT ImageId FROM EntriesImages WHERE EntryId = ?", [
                 line.id,
@@ -365,50 +329,7 @@ router.get("/outputs/:id", async (req, res) => {
           return {
             Quantity: line.Quantity,
             Details: line.Details,
-            Product: await database
-              .query("SELECT * FROM Products WHERE id = ?", [line.ProductId])
-              .then((val) => val.rows[0])
-              .then(async (product) => {
-                return {
-                  id: product.id,
-                  Name: product.Name,
-                  Description: product.Description,
-                  Code: product.Code,
-                  BarCode: product.BarCode,
-                  Categories:
-                    (await database
-                      .query(
-                        "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-                        [product.id]
-                      )
-                      .then((categories) => categories?.rows)) ?? [],
-                  Images:
-                    (await database
-                      .query(
-                        "SELECT ImageId FROM ProductImages WHERE ProductId = ?",
-                        [product.id]
-                      )
-                      .then((origin) =>
-                        origin?.rows.map((image) => ({
-                          Url: config.backendUrl + "/images/" + image.ImageId,
-                          id: image.ImageId,
-                        }))
-                      )) ?? [],
-                  OriginProduct:
-                    (await database
-                      .query(
-                        "SELECT id, Name FROM OriginProducts WHERE id = ?",
-                        [product.OriginProductId]
-                      )
-                      .then((origin) => origin?.rows[0])) ?? null,
-                  Location:
-                    (await database
-                      .query("SELECT id, Name FROM Locations WHERE id = ?", [
-                        product.LocationId,
-                      ])
-                      .then((location) => location?.rows[0])) ?? null,
-                };
-              }),
+            Product: await getProductData(line.ProductId, "id"),
             Images: await database
               .query("SELECT ImageId FROM OutputsImages WHERE OutputId = ?", [
                 line.id,
@@ -660,6 +581,63 @@ router.get("/product/:id", async (req, res) => {
     }
 
     res.json(data);
+  } catch (e) {
+    console.error("Error al consultar:", e);
+    res.status(404).send("Error al consultar la base de datos");
+  } finally {
+    database.close();
+  }
+});
+
+router.get("/historial/:productId", async (req, res) => {
+  const sqlEntries = `WITH AllMovements AS (SELECT EL.id, Quantity, Details, ProductId, EntryHeaderId AS HeaderId, "ENTRY" AS Type, EH.Date 
+FROM EntriesLines EL LEFT JOIN EntriesHeaders EH ON EH.id = EL.EntryHeaderId WHERE ProductId = ?
+UNION 
+SELECT OL.id, Quantity, Details, ProductId, OutputHeaderId AS HeaderI, "OUTPUT" AS Type, OH.Date 
+FROM OutputsLines OL LEFT JOIN OutputsHeaders OH ON OH.id = OL.OutputHeaderId WHERE ProductId = ?) 
+SELECT * FROM AllMovements
+ORDER BY Date DESC`;
+
+  const database = new DB();
+
+  try {
+    let { rows: data } = await database.query(sqlEntries, [
+      req.params.productId,
+      req.params.productId,
+    ]);
+
+    data = data.map(async (x) => {
+      return {
+        id: x.id,
+        Quantity: x.Quantity,
+        Details: x.Details,
+        Date: x.Date,
+        Type: x.Type,
+        HeaderId: x.HeaderId,
+        Images: await database
+          .query(
+            x.Type == "OUTPUT"
+              ? "SELECT ImageId FROM OutputsImages WHERE OutputId = ?"
+              : "SELECT ImageId FROM EntriesImages WHERE EntryId = ?",
+            [x.id]
+          )
+          .then((x) =>
+            x.rows.map((img) => {
+              return {
+                id: img.ImageId,
+                Url: config.backendUrl + "/images/" + img.ImageId,
+              };
+            })
+          ),
+      };
+    });
+
+    data = await Promise.all(data);
+
+    res.json({
+      Product: await getProductData(req.params.productId),
+      Lines: data,
+    });
   } catch (e) {
     console.error("Error al consultar:", e);
     res.status(404).send("Error al consultar la base de datos");

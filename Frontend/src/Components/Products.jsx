@@ -58,8 +58,6 @@ export default function Products() {
   };
 
   const filterProducts = (product) => {
-    console.log(filters.location);
-
     if (
       filters.category.length > 0 &&
       !product.Categories.some((x) => filters.category.includes(x.id))

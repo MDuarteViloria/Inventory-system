@@ -12,6 +12,7 @@ export default {
     origins: "Origenes",
     images: "Imagenes",
     users: "Usuarios",
+    historial: "Historial",
   },
   dashboard: {
     products: "Productos",
@@ -77,8 +78,10 @@ export default {
     general: {
       seeEntry: "Visualizacion Entrada de Inventario",
       seeOutput: "Visualizacion Salida de Inventario",
+      seeMovement: "Ver movimiento",
       id: "ID",
       name: "Nombre",
+      type: "Tipo",
       quantity: "Cantidad",
       user: "Usuario",
       status: "Estado",
@@ -126,6 +129,10 @@ export default {
     entries: "Entradas de Inventario",
     output: "Salida de Inventario",
     outputs: "Salidas de Inventario",
+    historial: {
+      entry: "Entrada",
+      output: "Salida",
+    },
     stock: {
       true: "Disponible",
       false: "No disponible",

@@ -1,6 +1,5 @@
 import { Container, Heading } from "@medusajs/ui";
 import { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2";
 import api from "../Sources/Api";
 import { useContext } from "react";
 import Contexts from "../Sources/Contexts";

@@ -12,6 +12,7 @@ export default {
     origins: "起源",
     images: "图片",
     users: "用户",
+    historial: "历史记录",
   },
   dashboard: {
     products: "产品",
@@ -77,8 +78,10 @@ export default {
     general: {
       seeEntry: "查看库存录入",
       seeOutput: "查看库存输出",
+      seeMovement: "查看移动",
       id: "ID",
       name: "名称",
+      type: "类型",
       quantity: "数量",
       user: "用户",
       status: "状态",
@@ -126,6 +129,10 @@ export default {
     entries: "库存录入",
     output: "库存输出",
     outputs: "库存输出",
+    historial: {
+      entry: "录入",
+      output: "输出",
+    },
     stock: {
       true: "可用",
       false: "不可用",

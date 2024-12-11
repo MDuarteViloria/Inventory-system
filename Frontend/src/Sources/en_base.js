@@ -12,6 +12,7 @@ export default {
     origins: "Origins",
     images: "Images",
     users: "Users",
+    historial: "History",
   },
   dashboard: {
     products: "Products",
@@ -76,8 +77,10 @@ export default {
     general: {
       seeEntry: "View Inventory Entry",
       seeOutput: "View Inventory Output",
+      seeMovement: "View movement",
       id: "ID",
       name: "Name",
+      type: "Type",
       quantity: "Quantity",
       user: "User",
       status: "Status",
@@ -89,7 +92,7 @@ export default {
       seeImages: "View Images",
     },
     edit: {
-      editted: "Successfully edited",
+      editted: "Edited successfully",
       badParams: "All fields are required",
     },
     placeholder: {
@@ -125,6 +128,10 @@ export default {
     entries: "Inventory Entries",
     output: "Inventory Output",
     outputs: "Inventory Outputs",
+    historial: {
+      entry: "Entry",
+      output: "Output",
+    },
     stock: {
       true: "Available",
       false: "Not available",

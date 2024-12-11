@@ -1,7 +1,7 @@
 import Contexts from "../../Sources/Contexts";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Table, DropdownMenu, IconButton, toast, Toaster } from "@medusajs/ui";
-import { EllipsisHorizontal, PencilSquare, Eye, Trash } from "@medusajs/icons";
+import { EllipsisHorizontal, PencilSquare, Eye, Trash, Folder } from "@medusajs/icons";
 import seeProduct from "../Utilities/seeProduct";
 import { useNavigate } from "react-router-dom";
 import promptWithComponent from "../Utilities/promptWithComponent";
@@ -128,6 +128,15 @@ export function ProductDropdown({ product, fetchData }) {
             <Eye className="text-ui-fg-subtle" />
             {lang.general.see}
           </DropdownMenu.Item>
+          {!fetchData && <DropdownMenu.Item
+            onClick={async () => {
+              navigate("/inventory/historial/" + product.id);
+            }}
+            className="gap-x-2"
+          >
+            <Folder className="text-ui-fg-subtle" />
+            {lang.inventory.general.seeMovement}
+          </DropdownMenu.Item>}
           {fetchData && (
             <>
           <DropdownMenu.Item

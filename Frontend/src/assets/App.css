@@ -48,6 +48,10 @@ body {
   }
 }
 
+div:has(>.dropdownChild) {
+  z-index: 100000 !important; 
+}
+
 .bg-ui-bg-overlay {
   background-color: var(--bg-overlay);
   z-index: 20;

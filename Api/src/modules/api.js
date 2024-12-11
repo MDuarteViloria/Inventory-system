@@ -28,9 +28,9 @@ export async function createServer() {
 
   // Routers
   app.use("/auth", routerLogin);
-  app.use("/general", await AuthMiddleware(), routerGeneral)
+  app.use("/general", await AuthMiddleware(), routerGeneral);
   app.use("/products", await AuthMiddleware("PRODUCTOS"), routerProducts);
-  app.use("/images", await AuthMiddleware("IMAGENES", ["GET"]), routerImages);
+  app.use("/images", await AuthMiddleware("IMAGENES", ["GET", "POST"]), routerImages);
   app.use("/locations", await AuthMiddleware("PRODUCTOS"), routerLocations);
   app.use("/origins", await AuthMiddleware("PRODUCTOS"), routerOrigins);
   app.use("/categories", await AuthMiddleware("PRODUCTOS"), routerCategories);

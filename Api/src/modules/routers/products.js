@@ -1,56 +1,21 @@
 import express from "express";
 import DB from "../database/connect-db.js";
 import config from "../../config.js";
+import getProductData from "../controllers/GetProductData.js";
 
 const router = express.Router();
 
 // GET ALL
 router.get("/", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE Deleted = FALSE";
+  const sql = "SELECT id FROM Products WHERE Deleted = FALSE";
   const database = new DB();
 
   try {
     let data = await database.query(sql);
     data = await Promise.all(
       data.rows.map(async (product) => {
-        return {
-          id: product.id,
-          Name: product.Name,
-          Description: product.Description,
-          Code: product.Code,
-          BarCode: product.BarCode,
-          Categories:
-            (await database
-              .query(
-                "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-                [product.id]
-              )
-              .then((categories) => categories?.rows)) ?? [],
-          Images:
-            (await database
-              .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-                product.id,
-              ])
-              .then((origin) =>
-                origin?.rows.map((image) => ({
-                  Url: config.backendUrl + "/images/" + image.ImageId,
-                  id: image.ImageId,
-                }))
-              )) ?? [],
-          OriginProduct:
-            (await database
-              .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
-                product.OriginProductId,
-              ])
-              .then((origin) => origin?.rows[0])) ?? null,
-          Location:
-            (await database
-              .query("SELECT id, Name FROM Locations WHERE id = ?", [
-                product.LocationId,
-              ])
-              .then((location) => location?.rows[0])) ?? null,
-        };
+        return await getProductData(product.id);
       })
     );
     res.json(data);
@@ -65,52 +30,10 @@ router.get("/", async (req, res) => {
 // GET ONE BY ID
 router.get("/:id", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE id = ? AND Deleted = FALSE";
-  const database = new DB();
-
   try {
-    const data = await database.query(sql, [req.params.id]);
-    let product = data.rows[0];
+    let product = await getProductData(req.params.id, "id");
 
     if (product) {
-      product = {
-        id: product.id,
-        Name: product.Name,
-        Description: product.Description,
-        Code: product.Code,
-        BarCode: product.BarCode,
-        Categories:
-          (await database
-            .query(
-              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-              [product.id]
-            )
-            .then((categories) => categories?.rows)) ?? [],
-        Images:
-          (await database
-            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-              product.id,
-            ])
-            .then((im) =>
-              im?.rows.map((image) => ({
-                Url: config.backendUrl + "/images/" + image.ImageId,
-                id: image.ImageId,
-              }))
-            )) ?? [],
-        OriginProduct:
-          (await database
-            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
-              product.OriginProductId,
-            ])
-            .then((origin) => origin?.rows[0])) ?? null,
-        Location:
-          (await database
-            .query("SELECT id, Name FROM Locations WHERE id = ?", [
-              product.LocationId,
-            ])
-            .then((location) => location?.rows[0])) ?? null,
-      };
-
       res.json(product);
     } else {
       res
@@ -122,60 +45,17 @@ router.get("/:id", async (req, res) => {
     res
       .status(500)
       .json({ success: false, error: "Error al consultar la base de datos" });
-  } finally {
-    database.close();
   }
+    
 });
 
 // GET ONE BY CODE
 router.get("/code/:code", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE Code = ? AND Deleted = FALSE";
-  const database = new DB();
-
   try {
-    const data = await database.query(sql, [req.params.code]);
-    let product = data.rows[0];
+    product = await getProductData(req.params.code, "Code");
 
     if (product) {
-      product = {
-        id: product.id,
-        Name: product.Name,
-        Description: product.Description,
-        Code: product.Code,
-        BarCode: product.BarCode,
-        Categories:
-          (await database
-            .query(
-              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-              [product.id]
-            )
-            .then((categories) => categories?.rows)) ?? [],
-        Images:
-          (await database
-            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-              product.id,
-            ])
-            .then((origin) =>
-              origin?.rows.map((image) => ({
-                Url: config.backendUrl + "/images/" + image.ImageId,
-                id: image.ImageId,
-              }))
-            )) ?? [],
-        OriginProduct:
-          (await database
-            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
-              product.OriginProductId,
-            ])
-            .then((origin) => origin?.rows[0])) ?? null,
-        Location:
-          (await database
-            .query("SELECT id, Name FROM Locations WHERE id = ?", [
-              product.LocationId,
-            ])
-            .then((location) => location?.rows[0])) ?? null,
-      };
-
       res.json(product);
     } else {
       res
@@ -187,60 +67,16 @@ router.get("/code/:code", async (req, res) => {
     res
       .status(500)
       .json({ success: false, error: "Error al consultar la base de datos" });
-  } finally {
-    database.close();
   }
 });
 
 // GET ONE BY CODE
 router.get("/barcode/:barcode", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
-  const sql = "SELECT * FROM Products WHERE BarCode = ? AND Deleted = FALSE";
-  const database = new DB();
-
-  try {
-    const data = await database.query(sql, [req.params.barcode]);
-    let product = data.rows[0];
+    try {
+    product = await getProductData(req.params.barcode, "BarCode");
 
     if (product) {
-      product = {
-        id: product.id,
-        Name: product.Name,
-        Description: product.Description,
-        Code: product.Code,
-        BarCode: product.BarCode,
-        Categories:
-          (await database
-            .query(
-              "SELECT C.id AS id, C.Name FROM CategoriesProducts CP INNER JOIN Categories C ON CP.IdCategory = C.id WHERE CP.IdProduct = ?",
-              [product.id]
-            )
-            .then((categories) => categories?.rows)) ?? [],
-        Images:
-          (await database
-            .query("SELECT ImageId FROM ProductImages WHERE ProductId = ?", [
-              product.id,
-            ])
-            .then((origin) =>
-              origin?.rows.map((image) => ({
-                Url: config.backendUrl + "/images/" + image.ImageId,
-                id: image.ImageId,
-              }))
-            )) ?? [],
-        OriginProduct:
-          (await database
-            .query("SELECT id, Name FROM OriginProducts WHERE id = ?", [
-              product.OriginProductId,
-            ])
-            .then((origin) => origin?.rows[0])) ?? null,
-        Location:
-          (await database
-            .query("SELECT id, Name FROM Locations WHERE id = ?", [
-              product.LocationId,
-            ])
-            .then((location) => location?.rows[0])) ?? null,
-      };
-
       res.json(product);
     } else {
       res
@@ -252,8 +88,6 @@ router.get("/barcode/:barcode", async (req, res) => {
     res
       .status(500)
       .json({ success: false, error: "Error al consultar la base de datos" });
-  } finally {
-    database.close();
   }
 });
 
@@ -289,7 +123,8 @@ router.post("/", async (req, res) => {
   }
 
   if (BarCode) {
-    const sql = "SELECT * FROM Products WHERE (BarCode = ?) AND Deleted = FALSE";
+    const sql =
+      "SELECT * FROM Products WHERE (BarCode = ?) AND Deleted = FALSE";
     const data = await database.query(sql, [BarCode]);
     if (data.rows[0]) {
       return res
@@ -311,7 +146,7 @@ router.post("/", async (req, res) => {
     "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
 
   try {
-    const {rows: insProductRes} = await database.query(sql, [
+    const { rows: insProductRes } = await database.query(sql, [
       Name,
       Description,
       Code,
@@ -369,7 +204,8 @@ router.patch("/:id", async (req, res) => {
   const database = new DB();
 
   if (Code) {
-    const sql = "SELECT * FROM Products WHERE (Code = ?) AND id <> ? AND Deleted = FALSE";
+    const sql =
+      "SELECT * FROM Products WHERE (Code = ?) AND id <> ? AND Deleted = FALSE";
     const data = await database.query(sql, [Code, req.params.id]);
     if (data.rows[0]) {
       return res
@@ -379,7 +215,8 @@ router.patch("/:id", async (req, res) => {
   }
 
   if (BarCode) {
-    const sql = "SELECT * FROM Products WHERE (BarCode = ?) AND id <> ? AND Deleted = FALSE";
+    const sql =
+      "SELECT * FROM Products WHERE (BarCode = ?) AND id <> ? AND Deleted = FALSE";
     const data = await database.query(sql, [BarCode, req.params.id]);
     if (data.rows[0]) {
       return res
@@ -398,7 +235,7 @@ router.patch("/:id", async (req, res) => {
 
   const sqlCategoriesInit =
     "DELETE FROM CategoriesProducts WHERE IdProduct = ?";
-    
+
   const sqlCategoriesFinish =
     "INSERT INTO CategoriesProducts (IdProduct, IdCategory) VALUES (?, ?)";
 
@@ -448,7 +285,8 @@ router.patch("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const database = new DB();
 
-  const sql = "UPDATE Products SET Deleted = TRUE, ModifyDate = DATE() WHERE id = ? AND Deleted = FALSE";
+  const sql =
+    "UPDATE Products SET Deleted = TRUE, ModifyDate = DATE() WHERE id = ? AND Deleted = FALSE";
   const sqlStock = "DELETE FROM StockProducts WHERE ProductId = ?";
 
   try {

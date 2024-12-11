@@ -26,6 +26,7 @@ import en_base from "./Sources/en_base.js";
 import Users from "./Components/Users.jsx";
 import Images from "./Components/Images.jsx";
 import zh_base from "./Sources/zh_base.js";
+import InventoryHistorial from "./Components/InventoryHistorial.jsx";
 
 function App() {
   const [lang, setLang] = useState(
@@ -69,6 +70,7 @@ function App() {
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/providers" element={<Providers />} />
                 <Route path="/inventory" element={<Inventory />} />
+                <Route path="/inventory/historial/:productId" element={<InventoryHistorial />} />
                 <Route path="/inventory/entries" element={<InventoryEntry />} />
                 <Route
                   path="/inventory/outputs"
