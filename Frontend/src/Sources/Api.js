@@ -8,6 +8,21 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+
+  let lang = document.querySelector("meta[itemprop='language']").content
+  const newUrl = new URL(config.baseURL + config.url);
+
+  newUrl.searchParams.set("lang", lang);
+
+  const newConfig = config;
+
+  newConfig.url = newUrl.pathname + newUrl.search;
+
+  return newConfig;
+
+});
+
 api.interceptors.response.use(
   (response) => {
     return response;

@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     data = data.rows.map(async (prod) => {
       return {
         ...prod,
-        ...await getProductData(prod.id),
+        ...await getProductData(prod.id, "id", false, req.query.lang, req.query.withTranslation === "true"),
       };
     })
 
@@ -174,7 +174,7 @@ router.get("/entries/:id", async (req, res) => {
                 line.ProviderId,
               ])
               .then((val) => val.rows[0]),
-            Product: await getProductData(line.ProductId, "id"),
+            Product: await getProductData(line.ProductId, "id", false, req.query.lang),
             Images: await database
               .query("SELECT ImageId FROM EntriesImages WHERE EntryId = ?", [
                 line.id,
@@ -329,7 +329,7 @@ router.get("/outputs/:id", async (req, res) => {
           return {
             Quantity: line.Quantity,
             Details: line.Details,
-            Product: await getProductData(line.ProductId, "id"),
+            Product: await getProductData(line.ProductId, "id", false, req.query.lang),
             Images: await database
               .query("SELECT ImageId FROM OutputsImages WHERE OutputId = ?", [
                 line.id,
@@ -635,7 +635,7 @@ ORDER BY Date DESC`;
     data = await Promise.all(data);
 
     res.json({
-      Product: await getProductData(req.params.productId),
+      Product: await getProductData(req.params.productId, "id", false, req.query.lang, req.query.withTranslation === "true"),
       Lines: data,
     });
   } catch (e) {

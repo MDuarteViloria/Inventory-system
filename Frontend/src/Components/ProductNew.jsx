@@ -17,6 +17,8 @@ import ImageSelector from "./Subcomponents/ImageSelector";
 import { useNavigate } from "react-router-dom";
 import { MultiSelect } from "./Subcomponents/Multiselect";
 import Api from "../Sources/Api";
+import promptWithComponent from "./Utilities/promptWithComponent";
+import FormPromptComponent from "./Subcomponents/FormPromptComponent";
 
 export default function ProductNew() {
   const [product, setProduct] = useState({});
@@ -90,6 +92,28 @@ export default function ProductNew() {
         }
       });
   };
+
+  const addTranslation = async () => {
+    const { chinese } = await promptWithComponent((resolve) => (
+      <FormPromptComponent
+        resolve={resolve}
+        lang={lang}
+        title={lang.products.create.translations.title}
+        fields={[
+          {
+            nameProp: "chinese",
+            label: lang.products.create.translations.chinese,
+            type: "text",
+            defaultValue: product.title_zh,
+          },
+        ]}
+      />
+    ));
+    if (chinese) {
+      changeProperty("title_zh", chinese);
+    }
+  };
+
   const saveProduct = async (e) => {
     if (!validCode) {
       toast.error(lang.products.create.validations.code.notValid);
@@ -110,6 +134,7 @@ export default function ProductNew() {
 
     const productBody = {
       Name: product.title,
+      Name_ZH: product.title_zh.trim() ? product.title_zh : null,
       Description: product.description ?? "",
       Code: product.code,
       BarCode: product.barcode,
@@ -152,17 +177,26 @@ export default function ProductNew() {
 
         <Container className="flex flex-col gap-4 mb-8">
           {/* TITLE - DESCRIPTION INPUT */}
-          <InputLabel
-            label={lang.products.create.labels.title}
-            className="flex flex-col"
-          >
-            <Input
-              type="text"
-              onChange={(e) => changeProperty("title", e.target.value)}
-              className="px-2"
-              placeholder={lang.products.create.placeholders.title}
-            />
-          </InputLabel>
+          <div className="flex gap-4">
+            <InputLabel
+              label={lang.products.create.labels.title}
+              className="flex flex-col flex-grow"
+            >
+              <Input
+                type="text"
+                onChange={(e) => changeProperty("title", e.target.value)}
+                className="px-2"
+                placeholder={lang.products.create.placeholders.title}
+              />
+            </InputLabel>
+            <Button
+              onClick={addTranslation}
+              variant="secondary"
+              className="h-min mt-auto"
+            >
+              {lang.general.addTranslation}
+            </Button>
+          </div>
 
           <InputLabel
             label={lang.products.create.labels.description}

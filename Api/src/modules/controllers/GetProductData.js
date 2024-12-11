@@ -4,7 +4,9 @@ import DB from "../database/connect-db.js";
 export default async function getProductData(
   productId,
   type = "id",
-  deleted = false
+  deleted = false,
+  lang = "es",
+  withTranslation = false
 ) {
   const database = new DB();
   const sql = "SELECT * FROM Products WHERE (" + type + " = ?) AND Deleted = ?";
@@ -15,7 +17,10 @@ export default async function getProductData(
   if (product) {
     product = {
       id: product.id,
-      Name: product.Name,
+      Name: withTranslation
+        ? product.Name
+        : { es: product.Name, zh: product.Name_ZH }[lang] ?? product.Name,
+      Name_ZH: withTranslation ? product.Name_ZH : undefined,
       Description: product.Description,
       Code: product.Code,
       BarCode: product.BarCode,

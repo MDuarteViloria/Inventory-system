@@ -27,8 +27,6 @@ export default function Settings() {
 
   const langs = [
     { label: "Español", value: "es" },
-    { label: "English", value: "en" },
-    { label: "Français", value: "fr" },
     { label: "奇诺", value: "zh" },
   ];
 

@@ -21,8 +21,6 @@ import InventoryOutput from "./Components/InventoryOutput.jsx";
 import InventoryOutputNew from "./Components/InventoryOutputNew.jsx";
 import Settings from "./Components/Settings.jsx";
 import SeeOutput from "./Components/SeeOutput.jsx";
-import fr_base from "./Sources/fr_base.js";
-import en_base from "./Sources/en_base.js";
 import Users from "./Components/Users.jsx";
 import Images from "./Components/Images.jsx";
 import zh_base from "./Sources/zh_base.js";
@@ -48,12 +46,12 @@ function App() {
   return (
     <>
       <div className="light">
+        <meta itemProp="language" content={lang} />
         <contexts.langContext.Provider
           value={{
             user,
             validatePermissions,
-            lang: { es: es_base, fr: fr_base, en: en_base, zh: zh_base }[lang],
-            selectedLang: lang,
+            lang: { es: es_base, zh: zh_base }[lang],
             setLang,
           }}
         >

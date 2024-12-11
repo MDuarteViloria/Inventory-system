@@ -1,6 +1,5 @@
 import express from "express";
 import DB from "../database/connect-db.js";
-import config from "../../config.js";
 import getProductData from "../controllers/GetProductData.js";
 
 const router = express.Router();
@@ -15,7 +14,7 @@ router.get("/", async (req, res) => {
     let data = await database.query(sql);
     data = await Promise.all(
       data.rows.map(async (product) => {
-        return await getProductData(product.id);
+        return await getProductData(product.id, "id", false, req.query.lang, req.query.withTranslation === "true");
       })
     );
     res.json(data);
@@ -31,7 +30,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
   try {
-    let product = await getProductData(req.params.id, "id");
+    let product = await getProductData(req.params.id, "id", false, req.query.lang, req.query.withTranslation === "true");
 
     if (product) {
       res.json(product);
@@ -53,7 +52,7 @@ router.get("/:id", async (req, res) => {
 router.get("/code/:code", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
   try {
-    product = await getProductData(req.params.code, "Code");
+    let product = await getProductData(req.params.code, "Code", false, req.query.lang, req.query.withTranslation === "true");
 
     if (product) {
       res.json(product);
@@ -74,7 +73,7 @@ router.get("/code/:code", async (req, res) => {
 router.get("/barcode/:barcode", async (req, res) => {
   // Consulta SQL para obtener los datos de la tabla 'Products'
     try {
-    product = await getProductData(req.params.barcode, "BarCode");
+    let product = await getProductData(req.params.barcode, "BarCode", false, req.query.lang, req.query.withTranslation === "true");
 
     if (product) {
       res.json(product);
@@ -95,6 +94,7 @@ router.get("/barcode/:barcode", async (req, res) => {
 router.post("/", async (req, res) => {
   const {
     Name,
+    Name_ZH,
     Description,
     Code,
     BarCode,
@@ -134,7 +134,7 @@ router.post("/", async (req, res) => {
   }
 
   const sql =
-    "INSERT INTO Products (Name, Description, Code, BarCode, OriginProductId, LocationId, ModifyDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, DATE(), FALSE) RETURNING id";
+    "INSERT INTO Products (Name, Name_ZH, Description, Code, BarCode, OriginProductId, LocationId, ModifyDate, Deleted) VALUES (?, ?, ?, ?, ?, ?, ?, DATE(), FALSE) RETURNING id";
 
   const sqlStock =
     "INSERT INTO StockProducts (Quantity, ProductId) VALUES (?, ?)";
@@ -148,6 +148,7 @@ router.post("/", async (req, res) => {
   try {
     const { rows: insProductRes } = await database.query(sql, [
       Name,
+      Name_ZH,
       Description,
       Code,
       BarCode,
@@ -192,6 +193,7 @@ router.post("/", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   const {
     Name = null,
+    Name_ZH = null,
     Description = null,
     Code = null,
     BarCode = null,
@@ -226,7 +228,7 @@ router.patch("/:id", async (req, res) => {
   }
 
   const sql =
-    "UPDATE Products SET Name = IFNULL(?, Name), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId), ModifyDate = DATE() WHERE id = ?";
+    "UPDATE Products SET Name = IFNULL(?, Name),  Name_ZH = IFNULL(?, Name_ZH), Description = IFNULL(?, Description), Code = IFNULL(?, Code), BarCode = IFNULL(?, BarCode), OriginProductId = IFNULL(?, OriginProductId), LocationId = IFNULL(?, LocationId), ModifyDate = DATE() WHERE id = ?";
 
   const sqlImageInit = "DELETE FROM ProductImages WHERE ProductId = ?";
 
@@ -242,6 +244,7 @@ router.patch("/:id", async (req, res) => {
   try {
     const dbRes = await database.query(sql, [
       Name,
+      Name_ZH,
       Description,
       Code,
       BarCode,

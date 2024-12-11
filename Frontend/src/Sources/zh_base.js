@@ -28,6 +28,7 @@ export default {
     search: "搜索...",
     save: "保存",
     add: "添加",
+    addTranslation: "添加翻译",
     searchInput: "搜索...",
     images: "图片",
     noItems: "没有项目",
@@ -193,6 +194,10 @@ export default {
     },
     selfName: "产品",
     create: {
+      translations: {
+        title: "翻译",
+        chinese: "中国人",
+      },
       labels: {
         title: "标题",
         description: "描述",

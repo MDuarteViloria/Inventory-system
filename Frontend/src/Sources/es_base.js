@@ -28,6 +28,7 @@ export default {
     search: "Buscar...",
     save: "Guardar",
     add: "Añadir",
+    addTranslation: "Añadir traduccion",
     searchInput: "Buscar...",
     images: "Imagenes",
     noItems: "No hay elementos",
@@ -193,6 +194,10 @@ export default {
     },
     selfName: "Producto",
     create: {
+      translations: {
+        title: "Traducciones",
+        chinese: "Chino",
+      },
       labels: {
         title: "Título",
         description: "Descripción",

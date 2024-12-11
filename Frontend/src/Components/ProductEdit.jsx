@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Contexts from "../Sources/Contexts";
 import {
   Heading,
@@ -17,6 +17,8 @@ import ImageSelector from "./Subcomponents/ImageSelector";
 import { useNavigate, useParams } from "react-router-dom";
 import { MultiSelect } from "./Subcomponents/Multiselect";
 import Api from "../Sources/Api";
+import promptWithComponent from "./Utilities/promptWithComponent";
+import FormPromptComponent from "./Subcomponents/FormPromptComponent";
 
 export default function ProductEdit() {
   const [product, setProduct] = useState(null);
@@ -44,7 +46,7 @@ export default function ProductEdit() {
         console.log(err);
       });
 
-    Api.get("/products/" + productId).then((res) => {
+    Api.get("/products/" + productId + "?withTranslation=true").then((res) => {
       if (res.status === 200) {
         const transformToLower = (obj) =>
           Object.keys(obj).reduce((curr, key) => {
@@ -62,6 +64,8 @@ export default function ProductEdit() {
         data["origin"] = data.originProduct;
         delete data["originProduct"];
         data["title"] = data.name;
+        data["title_zh"] = data.name_ZH;
+        delete data["name_ZH"];
         delete data["name"];
 
         setProduct(data);
@@ -116,6 +120,28 @@ export default function ProductEdit() {
         }
       });
   };
+
+  const addTranslation = async () => {
+    const { chinese } = await promptWithComponent((resolve) => (
+      <FormPromptComponent
+        resolve={resolve}
+        lang={lang}
+        title={lang.products.create.translations.title}
+        fields={[
+          {
+            nameProp: "chinese",
+            label: lang.products.create.translations.chinese,
+            type: "text",
+            defaultValue: product.title_zh,
+          },
+        ]}
+      />
+    ));
+    if (chinese) {
+      changeProperty("title_zh", chinese);
+    }
+  };
+
   const saveProduct = async (e) => {
     e.target.disabled = true;
 
@@ -138,6 +164,7 @@ export default function ProductEdit() {
 
     const productBody = {
       Name: product.title,
+      Name_ZH: product.title_zh,
       Description: product.description ?? "",
       Code: product.code,
       BarCode: product.barCode,
@@ -163,7 +190,7 @@ export default function ProductEdit() {
           toast.error(lang.products.edit.validations.error);
         }
       });
-      
+
     e.target.disabled = false;
   };
 
@@ -183,18 +210,27 @@ export default function ProductEdit() {
 
         <Container className="flex flex-col gap-4 mb-8">
           {/* TITLE - DESCRIPTION INPUT */}
-          <InputLabel
-            label={lang.products.edit.labels.title}
-            className="flex flex-col"
-          >
-            <Input
-              type="text"
-              defaultValue={product.title}
-              onChange={(e) => changeProperty("title", e.target.value)}
-              className="px-2"
-              placeholder={lang.products.edit.placeholders.title}
-            />
-          </InputLabel>
+          <div className="flex gap-4">
+            <InputLabel
+              label={lang.products.create.labels.title}
+              className="flex flex-col flex-grow"
+            >
+              <Input
+                type="text"
+                defaultValue={product.title}
+                onChange={(e) => changeProperty("title", e.target.value)}
+                className="px-2"
+                placeholder={lang.products.create.placeholders.title}
+              />
+            </InputLabel>
+            <Button
+              onClick={addTranslation}
+              variant="secondary"
+              className="h-min mt-auto"
+            >
+              {lang.general.addTranslation}
+            </Button>
+          </div>
 
           <InputLabel
             label={lang.products.edit.labels.description}

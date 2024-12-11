@@ -45,6 +45,9 @@
 <row name="Name" null="1" autoincrement="0">
 <datatype>VARCHAR(256)</datatype>
 <default>NULL</default></row>
+<row name="Name_ZH" null="1" autoincrement="0">
+<datatype>VARCHAR(256)</datatype>
+<default>NULL</default></row>
 <row name="Description" null="1" autoincrement="0">
 <datatype>VARCHAR(256)</datatype>
 <default>NULL</default></row>
@@ -101,11 +104,14 @@
 <part>id</part>
 </key>
 </table>
-<table x="1145" y="1391" name="Categories">
+<table x="1123" y="1354" name="Categories">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="Name" null="1" autoincrement="0">
+<datatype>VARCHAR(128)</datatype>
+<default>NULL</default></row>
+<row name="Name_ZH" null="1" autoincrement="0">
 <datatype>VARCHAR(128)</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -233,6 +239,9 @@
 <row name="Name" null="1" autoincrement="0">
 <datatype>VARCHAR(256)</datatype>
 <default>NULL</default></row>
+<row name="Name_ZH" null="1" autoincrement="0">
+<datatype>VARCHAR(256)</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
@@ -310,7 +319,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="2156.22216796875" y="1622.22216796875" name="Users">
+<table x="2156" y="1622" name="Users">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -327,7 +336,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="2132.22216796875" y="1773.888916015625" name="Permissions">
+<table x="2132" y="1773" name="Permissions">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -341,7 +350,7 @@
 <part>id</part>
 </key>
 </table>
-<table x="2325.22216796875" y="1677.888916015625" name="UserPermissions">
+<table x="2325" y="1677" name="UserPermissions">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
