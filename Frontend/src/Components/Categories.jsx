@@ -60,15 +60,15 @@ function Categories() {
         </div>
       {categories && !categories?.error ? (
         <AdaptableTable
-          data={categories.filter(itm => itm.Name.toLowerCase().includes(search.toLowerCase())).map((org) => {
+          data={categories.filter(itm => itm.Name.toLowerCase().includes(search.toLowerCase())).map((cat) => {
             return {
-              id: org.id,
-              Name: org.Name,
+              id: cat.id,
+              Name: cat.Name,
               dropDown: (
                 <CategoryDropDown
                   fetchData={fetchData}
                   lang={lang}
-                  originId={org.id}
+                  categoryId={cat.id}
                 />
               ),
             };
@@ -95,8 +95,8 @@ function Categories() {
   );
 }
 
-function CategoryDropDown({ originId: categoryId, lang, fetchData }) {
-  const editOrigin = async () => {
+function CategoryDropDown({ categoryId, lang, fetchData }) {
+  const editCategory = async () => {
     const originName = await promptWithComponent((resolve) => (
       <NewNamePrompt resolve={resolve} lang={lang} title={lang.categories.edit} />
     ));
@@ -134,7 +134,7 @@ function CategoryDropDown({ originId: categoryId, lang, fetchData }) {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Item
-            onClick={editOrigin}
+            onClick={editCategory}
             className="gap-x-2"
           >
             <PencilSquare className="text-ui-fg-subtle" />

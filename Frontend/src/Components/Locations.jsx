@@ -75,15 +75,15 @@ function Locations() {
             .filter((itm) =>
               itm.Name.toLowerCase().includes(search.toLowerCase())
             )
-            .map((org) => {
+            .map((loc) => {
               return {
-                id: org.id,
-                Name: org.Name,
+                id: loc.id,
+                Name: loc.Name,
                 dropDown: (
                   <LocationDropDown
                     fetchData={fetchData}
                     lang={lang}
-                    originId={org.id}
+                    locationId={loc.id}
                   />
                 ),
               };
@@ -110,8 +110,8 @@ function Locations() {
   );
 }
 
-function LocationDropDown({ originId: locationId, lang, fetchData }) {
-  const editOrigin = async () => {
+function LocationDropDown({ locationId, lang, fetchData }) {
+  const editLocation = async () => {
     const originName = await promptWithComponent((resolve) => (
       <NewNamePrompt
         resolve={resolve}
@@ -131,7 +131,7 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
     }
   };
 
-  const deleteOrigin = async () => {
+  const deleteLocation = async () => {
     const confirmed = await promptWithComponent((resolve) => (
       <ConfirmPrompt resolve={resolve} lang={lang} />
     ));
@@ -152,12 +152,12 @@ function LocationDropDown({ originId: locationId, lang, fetchData }) {
           </IconButton>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item onClick={editOrigin} className="gap-x-2">
+          <DropdownMenu.Item onClick={editLocation} className="gap-x-2">
             <PencilSquare className="text-ui-fg-subtle" />
             {lang.general.edit}
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
-          <DropdownMenu.Item onClick={deleteOrigin} className="gap-x-2">
+          <DropdownMenu.Item onClick={deleteLocation} className="gap-x-2">
             <Trash className="text-ui-fg-subtle" />
             {lang.general.delete}
           </DropdownMenu.Item>
